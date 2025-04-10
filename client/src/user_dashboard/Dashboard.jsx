@@ -98,6 +98,9 @@ const Dashboard = () => {
   const [highlightedElement, setHighlightedElement] = useState(null);
   const tourModalRef = useRef(null);
   
+  // Track if this is a login session
+  const [isNewSession, setIsNewSession] = useState(true);
+  
   // Tour steps
   const tourSteps = [
     {
@@ -233,9 +236,6 @@ const Dashboard = () => {
     setTimeout(() => {
       updateForCurrentStep(1);
     }, 100);
-    
-    // Save to localStorage
-    localStorage.setItem('dashboardTourShown', 'true');
   };
 
   // End tour
@@ -252,8 +252,6 @@ const Dashboard = () => {
       const newStep = tourStep + 1;
       setTourStep(newStep);
       updateForCurrentStep(newStep);
-    } else {
-      endTour();
     }
   };
 
@@ -305,19 +303,62 @@ const Dashboard = () => {
     e.preventDefault();
   };
 
-  // Check if user is new and start tour automatically
+  // Check for login and start tour automatically
   useEffect(() => {
-    if (!loading && user) {
-      const hasSeenTour = localStorage.getItem('dashboardTourShown');
-      if (!hasSeenTour && !tourCompleted) {
-        setTimeout(() => {
-          startTour();
-        }, 1500);
+    // Only run when the component first mounts and user is loaded
+    const handleLoginTour = async () => {
+      if (!loading && user) {
+        // Check if authentication just happened by looking at token timestamp
+        const authToken = localStorage.getItem('token');
+        
+        if (authToken) {
+          try {
+            // Get token timestamp - if it doesn't exist, create it now
+            let tourShownThisSession = sessionStorage.getItem('tourShownThisSession');
+            
+            if (!tourShownThisSession) {
+              // This is a new login session - mark that we've shown the tour this session
+              sessionStorage.setItem('tourShownThisSession', 'true');
+              
+              // Start the tour after a short delay
+              setTimeout(() => {
+                startTour();
+              }, 1000);
+            }
+          } catch (error) {
+            console.error('Error checking login status:', error);
+          }
+        }
       }
-    }
+    };
+    
+    handleLoginTour();
   }, [loading, user]);
 
-  // Clean up highlight on unmount
+  // Also add this effect to listen for login events from the auth context
+  useEffect(() => {
+    // Create a function to handle logout events (to reset tour for next login)
+    const handleLogout = () => {
+      // Clear tour session flag when user logs out
+      sessionStorage.removeItem('tourShownThisSession');
+    };
+    
+    // Add a listener for storage events (in case of logout in another tab)
+    const handleStorageChange = (event) => {
+      if (event.key === 'token' && !event.newValue && event.oldValue) {
+        // Token was removed (logout occurred)
+        handleLogout();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  // Clean up on unmount
   useEffect(() => {
     return () => {
       removeHighlight();

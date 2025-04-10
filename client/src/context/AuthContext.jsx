@@ -72,6 +72,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', res.data.token);
       setAuthToken(res.data.token);
       
+      // Clear any existing session state to ensure tour shows on new login
+      sessionStorage.clear();
+      
       setUser(res.data.user);
       setIsAuthenticated(true);
       setError(null);
