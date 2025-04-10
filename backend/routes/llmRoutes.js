@@ -7,6 +7,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const User = require('../models/User');
 const { decrypt } = require('../utils/crypto');
 
+// ========= Infer provider from model name ========= //
 function getProviderFromModel(modelName) {
   const lower = modelName.toLowerCase();
   if (lower.includes('gpt') || lower.startsWith('gpt')) return 'openai';
