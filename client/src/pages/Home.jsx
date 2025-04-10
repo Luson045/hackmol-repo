@@ -417,25 +417,25 @@ const Home = () => {
                 icon: <FaRobot className="w-8 h-8" />,
                 title: "List Your Tokens",
                 description: "Easily list your unused tokens with our simple listing process. Set your price and watch the offers come in.",
-                color: "from-indigo-500 to-purple-500"
+                color: "from-indigo-500 to-blue-600"
               },
               {
                 icon: <FaSmile className="w-8 h-8" />,
                 title: "Find Great Deals",
                 description: "Browse through verified token listings and find the perfect deal for your needs.",
-                color: "from-purple-500 to-pink-500"
+                color: "from-purple-500 to-violet-600"
               },
               {
                 icon: <FaStar className="w-8 h-8" />,
                 title: "Secure Exchange",
                 description: "Our escrow system ensures safe and secure token transfers between users.",
-                color: "from-pink-500 to-red-500"
+                color: "from-cyan-500 to-blue-600"
               },
               {
                 icon: <FaBrain className="w-8 h-8" />,
                 title: "Enjoy Premium Content",
                 description: "Access premium content at discounted rates and make the most of your tokens.",
-                color: "from-red-500 to-orange-500"
+                color: "from-emerald-500 to-teal-600"
               }
             ].map((step, index) => (
               <motion.div
@@ -514,16 +514,16 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-100 mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-100 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-blue-300 to-purple-300">
               Measurable Business Outcomes
             </h2>
-            <div className="w-20 h-px bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mb-6"></div>
+            <div className="w-40 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 mx-auto rounded-full mb-6"></div>
             <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-              Our enterprise AI platform delivers quantifiable performance improvements
+              Our enterprise AI platform delivers quantifiable performance improvements across your organization
             </p>
           </motion.div>
 
-          {/* Stats Grid */}
+          {/* Stats Grid - Redesigned Card Style */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
@@ -537,7 +537,10 @@ const Home = () => {
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                   </svg>
-                )
+                ),
+                color: "from-indigo-500 to-blue-600",
+                hoverColor: "hover:from-indigo-600 hover:to-blue-700",
+                accentColor: "rgba(99, 102, 241, 0.15)"
               },
               {
                 value: "100+",
@@ -549,7 +552,10 @@ const Home = () => {
                     <line x1="2" y1="12" x2="22" y2="12"></line>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                   </svg>
-                )
+                ),
+                color: "from-purple-500 to-violet-600",
+                hoverColor: "hover:from-purple-600 hover:to-violet-700",
+                accentColor: "rgba(139, 92, 246, 0.15)"
               },
               {
                 value: "30%",
@@ -561,7 +567,10 @@ const Home = () => {
                     <line x1="18" y1="20" x2="18" y2="4"></line>
                     <line x1="6" y1="20" x2="6" y2="16"></line>
                   </svg>
-                )
+                ),
+                color: "from-cyan-500 to-blue-600",
+                hoverColor: "hover:from-cyan-600 hover:to-blue-700",
+                accentColor: "rgba(6, 182, 212, 0.15)"
               },
               {
                 value: "$2M+",
@@ -572,26 +581,35 @@ const Home = () => {
                     <rect x="2" y="7" width="20" height="14" rx="2"></rect>
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                   </svg>
-                )
+                ),
+                color: "from-emerald-500 to-teal-600",
+                hoverColor: "hover:from-emerald-600 hover:to-teal-700",
+                accentColor: "rgba(16, 185, 129, 0.15)"
               }
             ].map((stat, index) => (
               <motion.div
                 key={index}
-                className="relative h-full"
+                className="relative"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ 
                   delay: index * 0.1, 
                   duration: 0.7, 
-                  ease: [0.25, 0.1, 0.25, 1]
+                  ease: [0.22, 1, 0.36, 1]
                 }}
               >
+                {/* Background accent */}
+                <div 
+                  className="absolute inset-0 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                  style={{ background: stat.accentColor }}
+                />
+                
                 <motion.div
-                  className="relative bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-md border border-gray-700 h-full overflow-hidden"
+                  className="group relative bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-700/70 h-full overflow-hidden"
                   whileHover={{ 
-                    y: -8,
-                    boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.3), 0 10px 15px -5px rgba(0, 0, 0, 0.2)",
+                    y: -10,
+                    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3), 0 15px 20px rgba(0, 0, 0, 0.2)",
                     transition: { 
                       type: "spring", 
                       stiffness: 300, 
@@ -599,76 +617,82 @@ const Home = () => {
                     }
                   }}
                 >
-                  <div className="p-6">
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div className="w-12 h-12 rounded-lg bg-blue-900/50 flex items-center justify-center p-2.5 text-blue-400 transition-all duration-300 group-hover:bg-blue-800 group-hover:text-white">
+                  {/* Card gradient accent top line */}
+                  <div className={`h-1.5 w-full bg-gradient-to-r ${stat.color} transform origin-left transition-all duration-300 group-hover:scale-x-100`}></div>
+                  
+                  <div className="p-8">
+                    {/* Icon with background circle */}
+                    <div className="mb-6 relative">
+                      <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${stat.color} ${stat.hoverColor} flex items-center justify-center p-4 text-white shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                         {stat.icon}
+                        {/* Pulse animation for icon */}
+                        <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${stat.color} animate-ping opacity-20`} style={{ animationDuration: '3s' }}></div>
                       </div>
-                      <h3 className="text-base font-medium text-gray-100">{stat.label}</h3>
+                      
+                      {/* Decorative elements */}
+                      <div className="absolute top-1/2 right-0 w-24 h-px bg-gradient-to-r from-transparent to-gray-700/70 opacity-50"></div>
                     </div>
                     
+                    {/* Label with colored accent */}
+                    <div className="flex items-center mb-2">
+                      <h3 className="text-lg font-semibold text-white bg-clip-text">{stat.label}</h3>
+                    </div>
+                    
+                    {/* Value with animation */}
                     <motion.div
-                      className="space-y-2"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
+                      className="flex items-baseline mb-2"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
+                      transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
                     >
                       <motion.span 
-                        className="block text-4xl font-bold text-white"
-                        initial={{ scale: 0.95, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ 
-                          delay: 0.3 + index * 0.1, 
-                          duration: 0.5,
-                          type: "spring",
-                          stiffness: 100
-                        }}
+                        className={`text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${stat.color}`}
                         whileHover={{
                           scale: 1.05,
-                          color: "#3b82f6", // blue-500
                           transition: { duration: 0.2 }
                         }}
                       >
                         {stat.value}
                       </motion.span>
-                      <p className="text-sm text-gray-300">
-                        {stat.description}
-                      </p>
                     </motion.div>
+                    
+                    {/* Description */}
+                    <p className="text-gray-400 font-medium mt-2">
+                      {stat.description}
+                    </p>
+                    
+                    {/* Progress indicator */}
+                    <div className="mt-6 h-1.5 w-full bg-gray-700/50 rounded-full overflow-hidden">
+                      <motion.div 
+                        className={`h-full bg-gradient-to-r ${stat.color} rounded-full`}
+                        initial={{ width: "0%" }}
+                        whileInView={{ width: "85%" }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5 + index * 0.1, duration: 1, ease: "easeOut" }}
+                      />
+                    </div>
+                    
+                    {/* View details button */}
+                    <div className="mt-6 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      <button className={`w-full py-2 rounded-lg bg-gradient-to-r ${stat.color} ${stat.hoverColor} text-white text-sm flex items-center justify-center`}>
+                        <span>View Details</span>
+                        <svg className="w-4 h-4 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                  
-                  {/* Progress bar that animates on hover */}
-                  <div className="h-1 w-full bg-gray-700 overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-gradient-to-r from-blue-400 to-blue-600 w-0"
-                      whileHover={{ width: "100%" }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </div>
-                  
-                  {/* Decorative accent */}
-                  <motion.div 
-                    className="absolute top-0 right-0 w-16 h-16"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 + index * 0.1, duration: 0.6 }}
-                  >
-                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500/10">
-                      <path d="M0 0L64 64V0H0Z" fill="currentColor"/>
-                    </svg>
-                  </motion.div>
                 </motion.div>
               </motion.div>
             ))}
           </div>
           
-          {/* Subtle background accents */}
-          <div className="relative w-full h-16 mt-12">
+          {/* Enhanced Background Elements */}
+          <div className="relative w-full h-24 mt-16">
             <motion.div 
-              className="absolute hidden lg:block -left-12 -top-32 w-64 h-64 rounded-full bg-blue-500/5"
+              className="absolute hidden lg:block -left-20 -top-40 w-80 h-80 rounded-full opacity-10"
+              style={{ background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.4) 0%, transparent 70%)' }}
               animate={{ 
                 y: [0, -20, 0],
                 scale: [1, 1.05, 1]
@@ -680,7 +704,8 @@ const Home = () => {
               }}
             />
             <motion.div 
-              className="absolute hidden lg:block right-0 top-0 w-32 h-32 rounded-full bg-blue-500/5"
+              className="absolute hidden lg:block right-10 bottom-0 w-60 h-60 rounded-full opacity-10"
+              style={{ background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.4) 0%, transparent 70%)' }}
               animate={{ 
                 y: [0, 15, 0],
                 x: [0, 10, 0],
@@ -692,6 +717,23 @@ const Home = () => {
                 ease: "easeInOut" 
               }}
             />
+            
+            {/* Decorative lines */}
+            <div className="absolute inset-y-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent"></div>
+            <div className="absolute inset-y-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-500/20 to-transparent"></div>
+          </div>
+          
+          {/* View All Stats CTA */}
+          <div className="flex justify-center mt-8">
+            <button className="group relative overflow-hidden px-8 py-3 rounded-xl bg-gray-800/70 backdrop-blur-sm border border-gray-700/50 text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900">
+              <span className="absolute inset-0 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-20 group-hover:w-full transition-all duration-300 ease-out"></span>
+              <span className="relative flex items-center">
+                View All Metrics
+                <svg className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </span>
+            </button>
           </div>
         </div>
       </motion.section>
