@@ -1,601 +1,997 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Orbit, 
-  Webhook, 
-  Unplug, 
-  Blocks, 
-  Cpu, 
-  ShieldCheck, 
-  Rocket,
-  Globe,
-  Database,
-  Zap,
-  Lock,
-  ChevronRight,
-  ChevronDown,
-  ArrowRight,
-  RefreshCw,
-  CreditCard,
-  CheckCircle
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useContext, useEffect, useState, useRef } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import SuccessStories from '../components/Success';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
-const FAQItem = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const contentRef = useRef(null);
+const phrases = [
+  "Trade Unused Tokens Seamlessly",
+  "Access Premium Content for Less",
+  "Join the Token Flow Ecosystem",
+  "Smart Trading, Better Savings"
+];
+
+const animals = [
+  { name: "Fox", trait: "Clever trading strategies" },
+  { name: "Owl", trait: "Wise token investments" },
+  { name: "Bear", trait: "Strong market presence" },
+  { name: "Bull", trait: "Growing token value" }
+];
+
+const Home = () => {
+  const { backendUrl } = useContext(AuthContext);
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
+  const featuresRef = useRef(null);
+  const statsRef = useRef(null);
+  const tokensRef = useRef(null);
   
-  // Convert string newlines to JSX line breaks
-  const renderAnswer = () => {
-    // Check if answer contains actual \n characters
-    if (answer.includes('\n')) {
-      return answer.split('\n').map((text, i, array) => (
-        <React.Fragment key={i}>
-          {text}
-          {i < array.length - 1 && <br />}
-        </React.Fragment>
-      ));
-    }
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.2]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
+
+  // Initialize animation state
+  useEffect(() => {
+    setTimeout(() => setIsLoaded(true), 300);
+  }, []);
+
+  useEffect(() => {
+    const phraseInterval = setInterval(() => {
+      setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
+    }, 4000);
     
-    // Handle escaped \n in string literals
-    if (answer.includes('\\n')) {
-      return answer.split('\\n').map((text, i, array) => (
-        <React.Fragment key={i}>
-          {text}
-          {i < array.length - 1 && <br />}
-        </React.Fragment>
-      ));
-    }
+    const animalInterval = setInterval(() => {
+      setCurrentAnimalIndex((prevIndex) => (prevIndex + 1) % animals.length);
+    }, 6000);
     
-    // If no newlines are found, return the original text
-    return answer;
+    return () => {
+      clearInterval(phraseInterval);
+      clearInterval(animalInterval);
+    };
+  }, []);
+
+  // Enhanced animations
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const floatAnimation = {
+    initial: { y: 0, rotate: 0 },
+    animate: {
+      y: [0, -10, 0],
+      rotate: [0, 2, 0, -2, 0],
+      transition: {
+        duration: 5,
+        repeat: Infinity,
+        repeatType: "reverse",
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        type: "spring", 
+        stiffness: 100, 
+        damping: 12 
+      }
+    }
+  };
+
+  const buttonHoverEffects = {
+    hover: { 
+      scale: 1.05, 
+      boxShadow: "0px 10px 20px rgba(79, 70, 229, 0.2)",
+      transition: { 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 10 
+      }
+    }
+  };
+
+  const textReveal = {
+    hidden: { opacity: 0, y: 20 },
+    visible: index => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 0.1 * index,
+        duration: 0.5
+      }
+    })
+  };
+
+  // 3D tilt effect for cards
+  const [tiltValues, setTiltValues] = useState({ x: 0, y: 0 });
+  
+  const handleTiltMove = (e, intensity = 10) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const tiltX = ((y - centerY) / centerY) * intensity;
+    const tiltY = ((centerX - x) / centerX) * intensity;
+    
+    setTiltValues({ x: tiltX, y: tiltY });
+  };
+  
+  const resetTilt = () => {
+    setTiltValues({ x: 0, y: 0 });
   };
 
   return (
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50 dark:from-gray-900 dark:to-indigo-900 overflow-x-hidden">
+      {/* Dynamic Particles Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-gradient-to-r from-blue-300 to-indigo-400 dark:from-blue-600 dark:to-indigo-700 opacity-10"
+            style={{
+              width: `${Math.random() * 300 + 50}px`,
+              height: `${Math.random() * 300 + 50}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              filter: "blur(40px)"
+            }}
+            animate={{
+              x: [0, Math.random() * 200 - 100],
+              y: [0, Math.random() * 200 - 100],
+              scale: [1, Math.random() * 0.4 + 0.8, 1],
+              opacity: [0.1, 0.2, 0.1],
+            }}
+            transition={{
+              duration: Math.random() * 30 + 20,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Hero Section with Parallax Effect */}
+      <motion.section 
+        className="relative pt-20 md:pt-32 pb-16 md:pb-24 px-4 overflow-hidden"
+        style={{ opacity, scale }}
+      >
+        <motion.div 
+          className="max-w-5xl mx-auto text-center relative z-10"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <motion.div
+            className="mb-6"
+            initial="initial"
+            animate="animate"
+            variants={floatAnimation}
+          >
+            <div className="w-24 h-24 md:w-32 md:h-32  mx-auto mb-6 relative">
+              {/* Glowing effect behind logo */}
+              <motion.div 
+                className="absolute inset-0 bg-indigo-500 dark:bg-indigo-600 rounded-full filter blur-xl"
+                animate={{ 
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [0.8, 1.1, 0.8]
+                }}
+                transition={{ 
+                  duration: 4,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              />
+              <svg viewBox="0 0 100 100" className="w-full  h-full text-indigo-600 dark:text-indigo-400 relative z-10">
+                <motion.path
+                  d="M50,10 C25,10 5,30 5,50 C5,70 25,90 50,90 C75,90 95,70 95,50 C95,30 75,10 50,10 Z"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  fill="none"
+                  initial={{ pathLength: 0, strokeDasharray: "0 1" }}
+                  animate={{ 
+                    pathLength: 1, 
+                    strokeDasharray: "1 0",
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatType: "loop", 
+                    repeatDelay: 1 
+                  }}
+                />
+                <motion.path
+                  d={animals[currentAnimalIndex].name === "Fox" ? 
+                     "M35,40 L30,30 L40,35 M65,40 L70,30 L60,35 M40,55 C45,65 55,65 60,55 M40,75 L60,75 L50,85 Z" :
+                     animals[currentAnimalIndex].name === "Owl" ? 
+                     "M35,35 C25,25 25,45 35,40 M65,35 C75,25 75,45 65,40 M45,55 L55,55 M35,65 C40,75 60,75 65,65 Z" :
+                     animals[currentAnimalIndex].name === "Bear" ? 
+                     "M30,35 C25,30 25,40 30,40 M70,35 C75,30 75,40 70,40 M45,60 L55,60 M40,70 C45,80 55,80 60,70 Z" :
+                     "M30,40 C25,30 25,45 30,40 M70,40 C75,30 75,45 70,40 M35,60 L65,60 M40,70 C50,80 60,70 50,60 Z"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeLinecap="round"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  key={animals[currentAnimalIndex].name}
+                  transition={{ duration: 0.5 }}
+                />
+              </svg>
+            </div>
+            <motion.p 
+              className="text-indigo-600 dark:text-indigo-400 font-semibold"
+              animate={{ 
+                opacity: [0.7, 1, 0.7],
+                scale: [0.98, 1.02, 0.98]
+              }}
+              transition={{ 
+                duration: 3,
+                repeat: Infinity
+              }}
+            >
+              {animals[currentAnimalIndex].name} • {animals[currentAnimalIndex].trait}
+            </motion.p>
+          </motion.div>
+
+          {/* Text transition effects */}
+          <div className="pb-7  flex items-center justify-center overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.h1 
+                key={phrases[currentPhraseIndex]}
+                className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white "
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -40, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                {phrases[currentPhraseIndex]}
+              </motion.h1>
+            </AnimatePresence>
+          </div>
+
+          <motion.p 
+            className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto"
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+          >
+            Buy and sell unused tokens at minimal cost. Get access to premium content 
+            without breaking the bank. Our marketplace connects token holders with 
+            content seekers for a win-win exchange.
+          </motion.p>
+          
+          <motion.div 
+            className="flex flex-col sm:flex-row justify-center gap-4"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.button 
+              variants={fadeInUp}
+              whileHover="hover"
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/marketplace')} 
+              className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium rounded-lg transition-all duration-300 text-lg hover:shadow-lg"
+              custom={buttonHoverEffects}
+            >
+              <motion.span className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Browse Marketplace
+              </motion.span>
+            </motion.button>
+            <motion.button 
+              variants={fadeInUp}
+              whileHover="hover"
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/login')} 
+              className="px-8 py-3 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 font-medium rounded-lg transition-all duration-300 text-lg hover:shadow-lg"
+              custom={buttonHoverEffects}
+            >
+              <motion.span className="flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+                JOIN US NOW
+              </motion.span>
+            </motion.button>
+          </motion.div>
+          
+          {/* Scroll indicator */}
+        
+           
+          </motion.div>
+       
+      </motion.section>
+
+      {/* Features Section with Scroll Animation */}
+      <motion.section 
+        className="py-16 px-4"
+        ref={featuresRef}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <motion.h2 
+            className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            How Token Flow Works
+          </motion.h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
+                title: "Sell Unused Tokens",
+                description: "Got extra tokens? List them on our marketplace and convert them into cash instead of letting them expire."
+              },
+              {
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />,
+                title: "Buy at Discount",
+                description: "Purchase tokens at reduced prices and unlock premium content across multiple platforms for less."
+              },
+              {
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />,
+                title: "Secure Transactions",
+                description: "Our platform ensures all exchanges are secure, transparent, and hassle-free for both buyers and sellers."
+              }
+            ].map((feature, index) => (
+              <motion.div 
+                key={index}
+                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-500"
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                custom={index}
+                whileHover={{ 
+                  y: -10,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  transition: { type: "spring", stiffness: 300, damping: 15 }
+                }}
+                onMouseMove={handleTiltMove}
+                onMouseLeave={resetTilt}
+                style={{
+                  perspective: "1000px",
+                  transformStyle: "preserve-3d",
+                  transform: `rotateX(${tiltValues.x}deg) rotateY(${tiltValues.y}deg)`
+                }}
+              >
+                <motion.div 
+                  className="h-12 w-12 mb-4 text-indigo-600 dark:text-indigo-400 relative"
+                  whileHover={{ rotate: 5 }}
+                >
+                  <motion.div 
+                    className="absolute inset-0 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg opacity-50"
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 0.7, 0.5] 
+                    }}
+                    transition={{ 
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="relative z-10">
+                    {feature.icon}
+                  </svg>
+                </motion.div>
+                <motion.h3 
+                  className="text-xl font-bold mb-2 text-gray-900 dark:text-white"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.2 * index, duration: 0.5 }}
+                >
+                  {feature.title}
+                </motion.h3>
+                <motion.p 
+                  className="text-gray-600 dark:text-gray-300"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.3 * index, duration: 0.5 }}
+                >
+                  {feature.description}
+                </motion.p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Stats Section with Counter Animation */}
+      <motion.section 
+        className="py-16 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 px-4"
+        ref={statsRef}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                value: "50K+",
+                label: "Active Users Trading Tokens",
+                color: "from-blue-400 to-indigo-600"
+              },
+              {
+                value: "100+",
+                label: "Supported Content Platforms",
+                color: "from-indigo-400 to-purple-600"
+              },
+              {
+                value: "30%",
+                label: "Average Savings for Buyers",
+                color: "from-purple-400 to-pink-600"
+              },
+              {
+                value: "$2M+",
+                label: "Monthly Token Value Traded",
+                color: "from-pink-400 to-red-600"
+              }
+            ].map((stat, index) => (
+              <motion.div 
+                key={index}
+                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md text-center overflow-hidden relative"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+              >
+                {/* Background gradient animation */}
+                <motion.div 
+                  className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${stat.color}`}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "100%" }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 + index * 0.1, duration: 0.8 }}
+                />
+                
+                {/* Counter animation */}
+                <motion.h2 
+                  className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400 mb-2 relative"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                >
+                  {stat.value}
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-black-600 to-red-600 dark:from-indigo-400 dark:to-blue-400"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+                  />
+                </motion.h2>
+                <motion.p 
+                  className="text-gray-600 dark:text-gray-300"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + index * 0.1, duration: 0.5 }}
+                >
+                  {stat.label}
+                </motion.p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Featured Tokens with Staggered Animation */}
+      <motion.section 
+        className="py-16 px-4"
+        ref={tokensRef}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <motion.h2 
+            className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Featured Tokens
+          </motion.h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { platform: "StreamFlix", discount: "25% off", icon: "🦊", color: "from-red-400 to-red-600" },
+              { platform: "MusicOwl", discount: "30% off", icon: "🦉", color: "from-green-400 to-green-600" },
+              { platform: "LearnBear", discount: "40% off", icon: "🐻", color: "from-blue-400 to-blue-600" },
+              { platform: "GamingBull", discount: "20% off", icon: "🐂", color: "from-yellow-400 to-yellow-600" },
+              { platform: "FitFox", discount: "35% off", icon: "🦊", color: "from-purple-400 to-purple-600" },
+              { platform: "NewsOwl", discount: "15% off", icon: "🦉", color: "from-indigo-400 to-indigo-600" }
+            ].map((item, index) => (
+              <motion.div 
+                key={index}
+                className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md group cursor-pointer"
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                custom={index}
+                whileHover={{ 
+                  y: -10,
+                  transition: { 
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 15 
+                  }
+                }}
+              >
+                <motion.div 
+                  className={`bg-gradient-to-r ${item.color} p-6 flex items-center justify-center text-5xl relative overflow-hidden h-24`}
+                  whileHover={{
+                    height: "6rem", // Slightly expand on hover
+                  }}
+                >
+                  {/* Animated background effect */}
+                  <motion.div 
+                    className="absolute inset-0 opacity-30"
+                    animate={{
+                      backgroundPosition: ["0% 0%", "100% 100%"],
+                    }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                    style={{
+                      backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"100\" height=\"100\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\" fill=\"%23ffffff\" fill-opacity=\"0.1\" fill-rule=\"evenodd\"/%3E%3C/svg%3E')",
+                      backgroundSize: "cover",
+                    }}
+                  />
+                  
+                  {/* Icon with animation */}
+                  <motion.span
+                    initial={{ scale: 1 }}
+                    whileHover={{ 
+                      scale: 1.2,
+                      rotate: [0, 5, -5, 0],
+                      transition: { duration: 0.5 }
+                    }}
+                  >
+                    {item.icon}
+                  </motion.span>
+                </motion.div>
+
+                <div className="p-6">
+                  <motion.h3 
+                    className="text-xl font-bold text-gray-900 dark:text-white mb-3"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.1 * index }}
+                  >
+                    {item.platform}
+                  </motion.h3>
+                  <div className="flex justify-between items-center">
+                    <motion.span 
+                      className="text-indigo-600 dark:text-indigo-400 font-semibold"
+                      whileHover={{ 
+                        scale: 1.05,
+                        textShadow: "0px 0px 8px rgba(79, 70, 229, 0.3)" 
+                      }}
+                    >
+                      {item.discount}
+                    </motion.span>
+                    <motion.button 
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm relative overflow-hidden group"
+                      whileHover={{ 
+                        scale: 1.05,
+                        transition: { type: "spring", stiffness: 400, damping: 10 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {/* Button hover effect */}
+                      <motion.span 
+                        className="absolute inset-0 w-0 bg-white opacity-20"
+                        initial={{ width: "0%" }}
+                        whileHover={{ 
+                          width: "100%",
+                          transition: { duration: 0.3 }
+                        }}
+                      />
+                      <span className="relative z-10 flex items-center">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        View Tokens
+                      </span>
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Interactive Call-to-Action */}
+      <motion.section 
+        className="py-20 px-4 bg-gradient-to-r from-indigo-600 to-blue-700 dark:from-indigo-900 dark:to-blue-900 relative overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        {/* Animated background patterns */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-white opacity-10"
+              style={{
+                width: `${Math.random() * 300 + 100}px`,
+                height: `${Math.random() * 300 + 100}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                x: [0, Math.random() * 100 - 50],
+                y: [0, Math.random() * 100 - 50],
+                scale: [1, Math.random() * 0.3 + 0.8, 1],
+                opacity: [0.05, 0.1, 0.05],
+              }}
+              transition={{
+                duration: Math.random() * 20 + 10,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold text-white mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Ready to Start Trading Tokens?
+          </motion.h2>
+          <motion.p 
+            className="text-lg md:text-xl text-indigo-100 mb-10 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Join thousands of users who are already saving money and making the most of their digital tokens.
+          </motion.p>
+          
+          <motion.div 
+            className="flex flex-col sm:flex-row justify-center gap-4 items-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <motion.button 
+              className="px-8 py-3 bg-white text-indigo-700 font-medium rounded-lg transition-all duration-300 text-lg relative overflow-hidden"
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0px 10px 20px rgba(255, 255, 255, 0.2)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/login')}
+            >
+              <motion.span 
+                className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0"
+                whileHover={{ opacity: 0.3, transition: { duration: 0.3 } }}
+              />
+              <span className="relative z-10 flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Create Free Account
+              </span>
+            </motion.button>
+            
+            <motion.button 
+              className="px-8 py-3 bg-transparent border-2 border-white text-white font-medium rounded-lg transition-all duration-300 text-lg relative overflow-hidden"
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/how-it-works')}
+            >
+              <motion.span 
+                className="absolute inset-0 bg-white opacity-0"
+                whileHover={{ opacity: 0.2, transition: { duration: 0.3 } }}
+              />
+              <span className="relative z-10 flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Learn More
+              </span>
+            </motion.button>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Enhanced Testimonials Section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <SuccessStories />
+      </motion.div>
+
+      {/* Platforms Showcase Section */}
+      <motion.section
+        className="py-16 px-4 bg-gray-50 dark:bg-gray-800"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <motion.h2
+            className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Compatible with Your Favorite Platforms
+          </motion.h2>
+          
+          <motion.div 
+            className="flex flex-wrap justify-center gap-6 md:gap-10"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {[
+              "StreamFlix", "MusicOwl", "LearnBear", "GamingBull", 
+              "FitFox", "NewsOwl", "CodeDeer", "PodcastRaven"
+            ].map((platform, index) => (
+              <motion.div
+                key={index}
+                className="flex items-center justify-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 w-full sm:w-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+              >
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-400 to-blue-500 text-white">
+                    {platform.charAt(0)}
+                  </div>
+                  <span className="font-medium text-gray-800 dark:text-white">
+                    {platform}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* FAQ Section with Accordion */}
+      <motion.section
+        className="py-16 px-4"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <motion.h2
+            className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Frequently Asked Questions
+          </motion.h2>
+          
+          <div className="space-y-4">
+            {[
+              {
+                question: "How does Token Flow work?",
+                answer: "Token Flow connects users who have unused tokens with those looking to save money on premium content. Sellers list their tokens at a discount, and buyers purchase them to access services for less than retail price."
+              },
+              {
+                question: "Is this legal and secure?",
+                answer: "Yes, Token Flow operates within the terms of service of supported platforms. All transactions are secured with end-to-end encryption, and our escrow system ensures safe token transfers between users."
+              },
+              {
+                question: "What platforms are supported?",
+                answer: "We support over 100 popular content platforms including streaming services, learning platforms, fitness apps, news subscriptions, and more. Check our marketplace for a complete list."
+              },
+              {
+                question: "How much can I save as a buyer?",
+                answer: "On average, buyers save about 30% compared to retail prices. Savings vary by platform and current market conditions, with some deals offering up to 50% off."
+              }
+            ].map((faq, index) => (
+              <FAQItem key={index} question={faq.question} answer={faq.answer} index={index} />
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Newsletter Subscription */}
+      <motion.section
+        className="py-16 px-4 bg-indigo-50 dark:bg-gray-800"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white dark:bg-gray-700 rounded-2xl p-8 md:p-12 shadow-lg relative overflow-hidden">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#smallGrid)" />
+              </svg>
+            </div>
+
+            <div className="relative z-10">
+              <motion.h3
+                className="text-2xl font-bold text-gray-900 dark:text-white mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                Stay Updated with Token Deals
+              </motion.h3>
+              <motion.p
+                className="text-gray-600 dark:text-gray-300 mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                Subscribe to our newsletter for exclusive token deals and platform updates.
+              </motion.p>
+              
+              <motion.form
+                className="flex flex-col sm:flex-row gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white flex-grow focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+                />
+                <motion.button
+                  type="submit"
+                  className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all duration-300 relative overflow-hidden"
+                  whileHover={{ 
+                    scale: 1.05,
+                    boxShadow: "0px 8px 15px rgba(79, 70, 229, 0.2)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.span 
+                    className="absolute inset-0 bg-white opacity-0"
+                    whileHover={{ opacity: 0.2, transition: { duration: 0.3 } }}
+                  />
+                  <span className="relative z-10">Subscribe</span>
+                </motion.button>
+              </motion.form>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+     
+     
+    </div>
+  );
+};
+
+// FAQ Accordion Item Component
+const FAQItem = ({ question, answer, index }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
     <motion.div 
-      initial={false}
-      className="bg-gray-800 rounded-xl mb-4 overflow-hidden"
+      className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
     >
       <motion.button
+        className="w-full text-left p-4 flex justify-between items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center p-6 text-left"
-        initial={false}
-        animate={{ 
-          backgroundColor: isOpen 
-            ? 'rgba(14, 165, 233, 0.2)' 
-            : 'transparent' 
-        }}
+        whileHover={{ backgroundColor: isOpen ? "inherit" : "rgba(0,0,0,0.02)" }}
       >
-        <span className="text-lg font-semibold">{question}</span>
-        <motion.div
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white">{question}</h3>
+        <motion.svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-5 w-5 text-gray-500 dark:text-gray-400" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <ChevronDown className="text-cyan-400" />
-        </motion.div>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </motion.svg>
       </motion.button>
       
-      <AnimatePresence initial={false}>
+      <AnimatePresence>
         {isOpen && (
-          <motion.div
-            key="content"
-            initial="collapsed"
-            animate="open"
-            exit="collapsed"
-            variants={{
-              open: { 
-                opacity: 1, 
-                height: 'auto',
-                transition: { 
-                  duration: 0.3,
-                  ease: [0.04, 0.62, 0.23, 0.98]
-                }
-              },
-              collapsed: { 
-                opacity: 0, 
-                height: 0,
-                transition: { 
-                  duration: 0.3,
-                  ease: [0.04, 0.62, 0.23, 0.98]
-                }
-              }
-            }}
-            className="overflow-hidden"
+          <motion.div 
+            className="bg-gray-50 dark:bg-gray-700 p-4"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="p-6 pt-0 text-gray-400">
-              {renderAnswer()}
-            </div>
+            <p className="text-gray-600 dark:text-gray-300">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.div>
-  );
-};
-
-const NetworkGraph = () => {
-  const [nodes, setNodes] = useState([]);
-  const animationFrameRef = useRef(null);
-
-  useEffect(() => {
-    // Generate network nodes with velocity and more dynamic properties
-    const generateNodes = () => {
-      const nodeCount = 30;
-      const newNodes = Array.from({ length: nodeCount }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 5 + 2,
-        vx: (Math.random() - 0.5) * 0.5, // slower horizontal velocity
-        vy: (Math.random() - 0.5) * 0.5, // slower vertical velocity
-        color: `rgba(0, ${Math.floor(Math.random() * 170) + 85}, 255, 0.6)` // varying blue shades
-      }));
-      setNodes(newNodes);
-    };
-
-    // Animate nodes with more complex movement
-    const animateNodes = () => {
-      setNodes(prevNodes => prevNodes.map(node => {
-        let newX = node.x + node.vx;
-        let newY = node.y + node.vy;
-        let newVx = node.vx;
-        let newVy = node.vy;
-
-        // Bounce off walls with slight randomness
-        if (newX < 0 || newX > 100) {
-          newVx = -node.vx * (0.8 + Math.random() * 0.4);
-          newX = newX < 0 ? 0 : 100;
-        }
-        if (newY < 0 || newY > 100) {
-          newVy = -node.vy * (0.8 + Math.random() * 0.4);
-          newY = newY < 0 ? 0 : 100;
-        }
-
-        return {
-          ...node,
-          x: newX,
-          y: newY,
-          vx: newVx,
-          vy: newVy
-        };
-      }));
-
-      animationFrameRef.current = requestAnimationFrame(animateNodes);
-    };
-
-    generateNodes();
-    animationFrameRef.current = requestAnimationFrame(animateNodes);
-
-    // Cleanup animation frame
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, []);
-
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      viewBox="0 0 100 100" 
-      className="absolute inset-0 w-full h-full opacity-30"
-    >
-      {/* Gradient definition */}
-      <defs>
-        <radialGradient id="nodeGradient">
-          <stop offset="10%" stopColor="rgba(0, 170, 255, 0.8)" />
-          <stop offset="95%" stopColor="rgba(0, 170, 255, 0.2)" />
-        </radialGradient>
-      </defs>
-
-      {nodes.map((node, i) => (
-        <React.Fragment key={node.id}>
-          {/* Connection lines */}
-          {nodes.slice(0, i).map((otherNode) => {
-            const distance = Math.sqrt(
-              Math.pow(node.x - otherNode.x, 2) + 
-              Math.pow(node.y - otherNode.y, 2)
-            );
-            
-            return distance < 30 ? (
-              <line
-                key={`line-${otherNode.id}`}
-                x1={node.x}
-                y1={node.y}
-                x2={otherNode.x}
-                y2={otherNode.y}
-                stroke="rgba(0, 170, 255, 0.2)"
-                strokeWidth="0.5"
-              />
-            ) : null;
-          })}
-          
-          {/* Glowing nodes */}
-          <circle
-            cx={node.x}
-            cy={node.y}
-            r={node.size / 2}
-            fill={node.color}
-            className="animate-pulse"
-          />
-        </React.Fragment>
-      ))}
-    </svg>
-  );
-};
-
-// New component for the How It Works steps
-const HowItWorksStep = ({ icon, title, description, step }) => {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: step * 0.1 }}
-      className="bg-gray-800 p-6 rounded-xl relative"
-    >
-      <div className="absolute -top-4 -left-4 bg-cyan-600 w-8 h-8 rounded-full flex items-center justify-center font-bold">
-        {step}
-      </div>
-      <motion.div 
-        className="mb-6 text-cyan-400"
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        transition={{ type: "spring", stiffness: 300 }}
-      >
-        {icon}
-      </motion.div>
-      <h3 className="text-xl font-bold mb-3">{title}</h3>
-      <p className="text-gray-400">{description}</p>
-    </motion.div>
-  );
-};
-
-// New component for the token problem collage
-const TokenProblemCollage = () => {
-  const problems = [
-    {
-      username: "@lightdreamscape",
-      platform: "Claude",
-      message: "What do I need Claude for anymore... It's 2-3x the price.\nIs there a cool open source project I should try out that requires a smarter model? Is there an app idea/workflow that requires using a smarter model that I can add to my workflow in the next week?\n**Is there a way to sell these credits?**",
-      color: "bg-red-600"
-    },
-    {
-      username: "@aMan42",
-      platform: "OpenAI",
-      message: "Just paid for 1000 GPT-4 tokens and only used 200 this month. Wish I could transfer them to next month's quota!",
-      color: "bg-blue-600"
-    },
-    {
-      username: "@gewappnet",
-      platform: "OpenAI",
-      message: "Please have a look at my Usage I have nto even used it extensively or heavily still my API has expired so is it based on the Time Period Allotted ? Or the amount of Usage done ?How do I get my API working again ? someone please advise.",
-      color: "bg-purple-600"
-    },
-    {
-      username: "@paachuthakdu",
-      platform: "Gemini",
-      message: "If you could give me your api key i will happily use it for my graduation project and I pinky promise I will not use after that!",
-      color: "bg-green-600"
-    },
-    {
-      username: "@dev_tools",
-      platform: "Mistral AI",
-      message: "Why can't we share tokens between teams? Some projects barely use any while others need more.",
-      color: "bg-yellow-600"
-    },
-    {
-      username: "@augustya15",
-      platform: "OpenAI",
-      message: "Does the Free API not have monthly replenish cycle where it gets replenished again every month ? is it only once in life time after signing up ?Will it not ever get replenished for free?",
-      color: "bg-teal-600"
-    }
-  ];
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {problems.map((problem, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.1 }}
-          whileHover={{ scale: 1.03 }}
-          className={`${problem.color} bg-opacity-20 p-4 rounded-xl border border-gray-700`}
-        >
-          <div className="flex items-center mb-3">
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
-              {problem.username.charAt(1).toUpperCase()}
-            </div>
-            <div>
-              <p className="font-bold">{problem.username}</p>
-              <p className="text-sm text-gray-400">{problem.platform}</p>
-            </div>
-          </div>
-          <p className="text-gray-300">{problem.message}</p>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-// Mobile Menu Component
-const MobileMenu = ({ isOpen, toggleMenu }) => {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="md:hidden absolute top-16 left-0 right-0 bg-gray-900 border-b border-gray-800 z-50"
-        >
-          <div className="flex flex-col p-4 space-y-4">
-            <a href="#" className="hover:text-cyan-400 transition-colors py-2">Home</a>
-            <a href="#how-it-works" className="hover:text-cyan-400 transition-colors py-2">How It Works</a>
-            <a href="#faq" className="hover:text-cyan-400 transition-colors py-2">FAQs</a>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-
-
-const Home = () => {
-  const [activeFeature, setActiveFeature] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const features = [
-    {
-      icon: <Unplug className="w-12 h-12 text-cyan-400" />,
-      title: "Unused Token Marketplace",
-      description: "Sell or buy excess AI platform tokens from multiple providers in one centralized marketplace."
-    },
-    {
-      icon: <Blocks className="w-12 h-12 text-purple-400" />,
-      title: "Multi-Platform Support",
-      description: "Trade tokens from various AI platforms including OpenAI, Anthropic, and more with ease."
-    },
-    {
-      icon: <ShieldCheck className="w-12 h-12 text-green-400" />,
-      title: "Secure Transactions",
-      description: "Guaranteed safe exchanges with our robust verification and encryption system."
-    }
-  ];
-
-  const stats = [
-    {
-      icon: <Globe className="w-10 h-10 text-blue-400" />,
-      value: "20+",
-      label: "AI Platforms Supported"
-    },
-    {
-      icon: <Database className="w-10 h-10 text-green-400" />,
-      value: "$500K+",
-      label: "Total Token Volume"
-    },
-    {
-      icon: <Zap className="w-10 h-10 text-yellow-400" />,
-      value: "1000+",
-      label: "Active Traders"
-    }
-  ];
-
-  const howItWorksSteps = [
-    {
-      icon: <RefreshCw className="w-12 h-12" />,
-      title: "List Your Unused Tokens",
-      description: "Connect your API accounts or manually list your unused tokens from various AI platforms for sale."
-    },
-    {
-      icon: <CreditCard className="w-12 h-12" />,
-      title: "Set Your Price",
-      description: "Define your selling price or browse available tokens to purchase at competitive rates."
-    },
-    {
-      icon: <CheckCircle className="w-12 h-12" />,
-      title: "Secure Transfer",
-      description: "Our platform securely handles the token transfer and payment without reavealing any of your sensitive data through our extensive encryption and filtering algorithms."
-    },
-    {
-      icon: <Rocket className="w-12 h-12" />,
-      title: "Start Using Immediately",
-      description: "Purchased tokens are instantly available in your account for immediate use on the respective platforms."
-    }
-  ];
-  
-  const faqs = [
-    {
-      question: "How does TokenSwapAI work?",
-      answer: "TokenSwapAI is a centralized marketplace where users can buy, sell, and exchange unused AI platform tokens. Simply create an account, list your tokens, and start trading securely. How it works? When you sell tokens:\n1. Our system verifies the available credit on your API key\n2. We create a temporary, encrypted copy of your API key in our secure database\n 3. The buyer receives access to this temporary key through our platform (buyer cannot see it)\n4. The buyer can use our in-app AI interface with this temporary access\n5. Once the purchased credits are used up or the access period ends, the temporary API key is permanently deleted"
-    },
-    {
-      question: "Which AI platforms are supported?",
-      answer: "Our aim is to be a generic platform and support tokens from major AI platforms including OpenAI, Anthropic, Google AI, and many others."
-    },
-    {
-      question: "Is trading tokens safe?",
-      answer: "We use advanced security protocols, including encryption and two-factor authentication, to ensure the safety of all transactions on our platform. \n\n Furthermore we use LLM models to verify if the buyer is not entering any malicious prompt, to keep the sellers identity and personal records safe."
-    },
-    {
-      question: "Is there any legal issue?",
-      answer: "Our platform operates in a regulatory space that's still evolving. While current AI platform terms of service have varying policies on token transfers, we closely monitor these policies and maintain open communication channels with major AI providers. Should any legal concerns arise, we're prepared to form partnerships with these companies to ensure compliance. For most models, sharing unused tokens between users is not currently restricted, allowing our marketplace to operate. We're committed to transparency and will promptly inform users of any policy changes that might affect token trading capabilities."
-    },
-    {
-      question: "Can I sell partial token amounts?",
-      answer: "Yes! You can list and trade fractional AI tokens, giving you maximum flexibility in managing your unused resources."
-    }
-  ];
-
-  return (
-    <div className="bg-gray-900 text-white min-h-screen">
-      
-      <div className="pt-16 md:pt-0"></div>
-      {/* Hero Section */}
-      <header className="relative container mx-auto pt-24 pb-16 px-4 text-center overflow-hidden">
-        {/* Network Graph Background */}
-        <NetworkGraph />
-
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Trade <span className="text-cyan-400">Unused AI Tokens</span>
-            <br className="hidden md:block" /> Maximize Your Digital Resources
-          </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
-            A centralized marketplace where you can buy, sell, and exchange unused AI platform tokens securely and efficiently.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button className="bg-cyan-600 hover:bg-cyan-500 px-6 py-3 rounded-full text-lg font-semibold transition-colors flex items-center justify-center">
-              Start Trading <ChevronRight className="ml-2" />
-            </button>
-            <button className="border border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 px-6 py-3 rounded-full text-lg font-semibold transition-colors">
-              Learn More
-            </button>
-          </div>
-        </div>
-      </header>
-
-
-      {/* Features Section */}
-      <section className="container mx-auto py-16 px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          Key <span className="text-cyan-400">Features</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <motion.div 
-              key={index}
-              className={`
-                bg-gray-800 p-6 rounded-xl 
-                transform transition-all duration-300
-                ${activeFeature === index 
-                  ? 'scale-105 border border-cyan-400 shadow-lg shadow-cyan-400/20' 
-                  : 'hover:scale-105'}
-              `}
-              onMouseEnter={() => setActiveFeature(index)}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <motion.div 
-                className="mb-4"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                {feature.icon}
-              </motion.div>
-              <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
-              <p className="text-gray-400">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Problem Collage Section - Replacing Testimonials */}
-      <section className="container mx-auto py-16 px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">
-          The <span className="text-cyan-400">Problem</span> We Solve
-        </h2>
-        <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-          Users everywhere face the same challenge - unused tokens that go to waste every month
-        </p>
-        <TokenProblemCollage />
-      </section>
-
-      {/* How It Works Section - New Addition */}
-      <section id="how-it-works" className="container mx-auto py-16 px-4">
-        <motion.h2 
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl md:text-4xl font-bold text-center mb-12"
-        >
-          How It <span className="text-cyan-400">Works</span>
-        </motion.h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-          {/* Connecting line between steps */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-cyan-600 to-blue-600 transform -translate-y-1/2 z-0"></div>
-          
-          {howItWorksSteps.map((step, index) => (
-            <HowItWorksStep
-              key={index}
-              icon={step.icon}
-              title={step.title}
-              description={step.description}
-              step={index + 1}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="container mx-auto py-16 px-4">
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          Our <span className="text-cyan-400">Vision</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-          {stats.map((stat, index) => (
-            <motion.div 
-              key={index} 
-              className="bg-gray-800 p-6 rounded-xl hover:scale-105 transition-transform"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <motion.div 
-                className="mb-4 flex justify-center"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 1 }}
-              >
-                {stat.icon}
-              </motion.div>
-              <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-              <p className="text-gray-400">{stat.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section id="faq"className="container mx-auto py-16 px-4">
-        <motion.h2 
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl md:text-4xl font-bold text-center mb-12"
-        >
-          Frequently Asked <span className="text-cyan-400">Questions</span>
-        </motion.h2>
-        <div className="max-w-3xl mx-auto">
-          {faqs.map((faq, index) => (
-            <FAQItem 
-              key={index} 
-              question={faq.question} 
-              answer={faq.answer} 
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-950 py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <Cpu className="w-6 h-6 text-cyan-400" />
-              <span className="text-xl font-bold">Token<span className="text-cyan-400">Flow</span></span>
-            </div>
-            <div className="flex flex-wrap justify-center space-x-6">
-              <a href="#" className="text-gray-400 hover:text-cyan-400 mb-2">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-cyan-400 mb-2">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-cyan-400 mb-2">Contact</a>
-            </div>
-          </div>
-          <p className="text-gray-400 text-center">
-            © 2025 TokenFlow. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
   );
 };
 

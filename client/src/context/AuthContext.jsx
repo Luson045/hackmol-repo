@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 export const AuthContext = createContext();
-axios.defaults.baseURL = 'http://tokenflow.onrender.com';
+axios.defaults.baseURL = 'https://tokenflow.onrender.com';
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
