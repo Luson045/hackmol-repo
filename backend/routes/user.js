@@ -29,6 +29,15 @@ router.get('/api-keys', auth, async (req, res) => {
   }
 });
 
+router.post('/payment', auth, async(req,res)=>{
+  try{
+    const user = await User.findById(req.user_.id);
+    user.amount+=req.paid;
+  }catch(err){
+    //
+  }
+})
+
 router.get('/temporary-keys', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('temporaryTokens');

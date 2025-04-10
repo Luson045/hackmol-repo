@@ -98,7 +98,7 @@ const Market = () => {
         props.onPurchaseComplete();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Error buying tokens');
+      //
     } finally {
       setProcessingPurchase(false);
     }

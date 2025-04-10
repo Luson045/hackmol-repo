@@ -7,7 +7,6 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const User = require('../models/User');
 const { decrypt } = require('../utils/crypto');
 
-// ========= Infer provider from model name ========= //
 function getProviderFromModel(modelName) {
   const lower = modelName.toLowerCase();
   if (lower.includes('gpt') || lower.startsWith('gpt')) return 'openai';
@@ -16,7 +15,46 @@ function getProviderFromModel(modelName) {
   throw new Error(`Unable to determine provider from model name: ${modelName}`);
 }
 
-// ========= Get available models ========= //
+// router.post('/check-gemini-balance', async (req, res) => {
+//   try {
+//     const { apiKey } = req.body;
+    
+//     if (!apiKey) {
+//       return res.status(400).json({ message: 'API key is required' });
+//     }
+    
+//     // Initialize the Gemini client
+//     const genAI = new GoogleGenerativeAI(apiKey);
+    
+//     try {
+//       // Get the quota info from Gemini API
+//       // Note: This is a placeholder. The actual Gemini API endpoint for quota may differ
+//       const quotaInfo = await genAI.getQuota();
+      
+//       return res.json({
+//         success: true,
+//         remainingTokens: quotaInfo.available,
+//         totalTokens: quotaInfo.limit,
+//         usagePercentage: (quotaInfo.used / quotaInfo.limit) * 100
+//       });
+//     } catch (apiError) {
+//       // If there's an authentication error, the API key is invalid
+//       if (apiError.status === 401) {
+//         return res.status(401).json({ message: 'Invalid API key' });
+//       }
+      
+//       // For other API-specific errors
+//       return res.status(400).json({ 
+//         message: 'Failed to fetch Gemini token balance', 
+//         error: apiError.message 
+//       });
+//     }
+//   } catch (error) {
+//     console.error('Error checking Gemini balance:', error);
+//     res.status(500).json({ message: 'Server error', error: error.message });
+//   }
+// });
+
 router.get('/available-models', auth, async (req, res) => {
   try {
     const { keyType, keyId } = req.query;

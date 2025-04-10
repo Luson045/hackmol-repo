@@ -13,7 +13,7 @@ import AdminRoute from './components/AdminRoute';
 import Footer from './components/Footer';
 import ChatInterface from './chat/ChatInterface';
 import './css/ChatInterface.css';
-
+import PaymentGateway from './pages/payment'
 function App() {
   return (
     <AuthProvider>
@@ -22,7 +22,6 @@ function App() {
           <Navbar />
           <div className="container">
             <Routes>
-              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route 
                 path="/dashboard" 
@@ -48,10 +47,18 @@ function App() {
                   </AdminRoute>
                 } 
               />
-              
+              <Route 
+                path="/payment" 
+                element={
+                  <AdminRoute>
+                    <payment />
+                  </AdminRoute>
+                } 
+              />   
             <Route 
               path="/chat" 
               element={<PrivateRoute><ChatInterface/></PrivateRoute>} />
+            <Route path="/" element={<Home />} />
             </Routes>
             <Footer/>
           </div>
