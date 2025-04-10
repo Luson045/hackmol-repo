@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import SuccessStories from '../components/Success';
-import Footer from '../Components/Footer';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 const phrases = [
@@ -942,7 +941,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Enhanced Footer */}
+     
      
     </div>
   );
