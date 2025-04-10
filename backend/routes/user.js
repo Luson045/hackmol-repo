@@ -29,6 +29,19 @@ router.get('/api-keys', auth, async (req, res) => {
   }
 });
 
+router.get('/flag',auth, async(req,res)=>{
+  try{
+    const {userId, amount} = req.body;
+    const user = await User.findById(userId);
+    const result = user.firstuser;
+    console.log(`firstuser: ${result }`);
+    return res.status(200).json({ message: result });
+  }catch(err){
+    console.log(err);
+    return res.status(500).json({ message: err });
+  }
+})
+
 router.post('/payment', auth, async(req,res)=>{
   try{
     const {userId, amount} = req.body;

@@ -11,6 +11,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import Footer from './components/Footer';
 import ChatInterface from './chat/ChatInterface';
+import ExpandableChatbot from './components/Chatbot';
 import './css/ChatInterface.css';
 import PaymentGateway from './pages/payment'
 function App() {
@@ -59,7 +60,8 @@ function App() {
               element={<PrivateRoute><ChatInterface/></PrivateRoute>} />
             <Route path="/" element={<Home />} />
             </Routes>
-            <Footer/>
+            <Footer/> 
+            <ExpandableChatbot/>
           </div>
         </div>
       </Router>
