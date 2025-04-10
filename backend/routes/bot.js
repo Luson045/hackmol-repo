@@ -98,6 +98,7 @@ async function generateResponse(query) {
     ${query}
     
     ### Instructions for AI:
+    (Dont return a very long answer)
     Please provide a clear, beginner-friendly explanation in simple terms. Use the following structure in your response:
     
     1. **Brief Summary:** Start with a quick overview of the answer in 1–2 sentences.
