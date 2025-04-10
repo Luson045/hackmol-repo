@@ -10,7 +10,7 @@ import Market from './pages/Market';
 // import AdminDashboard from './admin_dashboard/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
-import Footer from './Components/Footer';
+import Footer from './components/Footer';
 // import ChatInterface from './chat/ChatInterface';
 // import './css/ChatInterface.css';
 
