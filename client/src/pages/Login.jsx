@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 import '../css/AuthPage.css'; // We'll create this file for the animations and custom styles
 
 const Login = () => {
-  const { login, register, isAuthenticated, error } = useContext(AuthContext);
+  const { user, login, register, isAuthenticated, error } = useContext(AuthContext);
   const [authMode, setAuthMode] = useState('welcome'); // welcome, login, register, success
   
   // Form data for both login and register
@@ -126,7 +126,17 @@ const Login = () => {
   
   // Redirect if authenticated
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" />;
+    const user_role=user.role;
+    switch (user_role) {
+      case "user":
+        return <Navigate to="/dashboard" />;
+        break;
+      case "admin":
+        return <Navigate to="/admin" />;
+        break;
+      default:
+        break;
+    }
   }
 
   return (

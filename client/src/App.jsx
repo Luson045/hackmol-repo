@@ -7,7 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './user_dashboard/Dashboard';
 import Market from './pages/Market';
-// import AdminDashboard from './admin_dashboard/AdminDashboard';
+import AdminDashboard from './admin_dashboard/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import Footer from './components/Footer';
@@ -40,14 +40,14 @@ function App() {
                   </PrivateRoute>
                 } 
               />
-              {/* <Route 
+              <Route 
                 path="/admin" 
                 element={
                   <AdminRoute>
                     <AdminDashboard />
                   </AdminRoute>
                 } 
-              /> */}
+              />
               
             <Route 
               path="/chat" 
