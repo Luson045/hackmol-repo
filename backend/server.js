@@ -7,7 +7,8 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const marketplaceRoutes = require('./routes/marketplace');
 const adminRoutes = require('./routes/admin');
-const llmRoutes = require('./routes/llmRoutes')
+const llmRoutes = require('./routes/llmRoutes');
+const bot = require('./routes/bot');
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/llm', llmRoutes);
+app.use('/api/bot', bot);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
