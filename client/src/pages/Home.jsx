@@ -195,19 +195,19 @@ const Home = () => {
         </div>
 
         {/* Subtle moving gradient */}
-        <motion.div 
+    <motion.div
           className="absolute inset-0"
-          style={{
+      style={{
             background: 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%)',
             backgroundSize: '200% 200%',
           }}
-          animate={{
+      animate={{
             backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
+      }}
+      transition={{
             duration: 20,
-            repeat: Infinity,
-            repeatType: "reverse",
+        repeat: Infinity,
+        repeatType: "reverse",
             ease: "linear"
           }}
         />
@@ -224,40 +224,40 @@ const Home = () => {
 
         {/* Optimized floating elements */}
         {[...Array(3)].map((_, i) => (
-          <motion.div
+      <motion.div
             key={`float-${i}`}
             className="absolute rounded-full"
-            style={{
+        style={{
               width: `${Math.random() * 300 + 200}px`,
               height: `${Math.random() * 300 + 200}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
               background: `radial-gradient(circle at center, rgba(99, 102, 241, 0.03) 0%, transparent 70%)`,
               filter: 'blur(60px)',
               willChange: 'transform',
               transform: 'translateZ(0)',
               backfaceVisibility: 'hidden'
-            }}
-            animate={{
-              x: [0, Math.random() * 100 - 50],
-              y: [0, Math.random() * 100 - 50],
+        }}
+        animate={{
+          x: [0, Math.random() * 100 - 50],
+          y: [0, Math.random() * 100 - 50],
               scale: [1, 1.1, 1],
-            }}
-            transition={{
+        }}
+        transition={{
               duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-          />
-        ))}
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut"
+        }}
+      />
+    ))}
 
         {/* Subtle noise texture */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%\' height=\'100%\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
           backgroundSize: '200px 200px',
         }} />
-      </div>
+  </div>
 
       {/* Add CSS animation keyframes */}
       <style jsx>{`
@@ -295,10 +295,10 @@ const Home = () => {
           backfaceVisibility: 'hidden',
           willChange: 'transform'
         }}
-      >
-        <motion.div 
+  >
+   <motion.div
           className="max-w-5xl mx-auto text-center relative z-10 permanent-visible"
-          initial={{ opacity: 0, y: 20 }}
+  initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           style={{
@@ -312,63 +312,63 @@ const Home = () => {
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            whileHover={{ 
-              scale: 1.02,
-              transition: { duration: 0.3 }
-            }}
+  whileHover={{ 
+    scale: 1.02,
+    transition: { duration: 0.3 }
+  }}
           >
             <AnimatePresence mode="wait" initial={false}>
-              <motion.h1 
+        <motion.h1 
                 key={currentPhraseIndex}
                 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400 permanent-visible"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-              >
-                {phrases[currentPhraseIndex]}
-              </motion.h1>
-            </AnimatePresence>
+        >
+          {phrases[currentPhraseIndex]}
+        </motion.h1>
+      </AnimatePresence>
           </motion.div>
 
-          <motion.p 
+    <motion.p 
             className="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl mx-auto permanent-visible"
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-          >
-            Buy and sell unused tokens at minimal cost. Get access to premium content 
-            without breaking the bank. Our marketplace connects token holders with 
-            content seekers for a win-win exchange.
-          </motion.p>
-
-          <motion.div 
+      variants={fadeInUp}
+      initial="hidden"
+      animate="visible"
+    >
+      Buy and sell unused tokens at minimal cost. Get access to premium content 
+      without breaking the bank. Our marketplace connects token holders with 
+      content seekers for a win-win exchange.
+    </motion.p>
+    
+    <motion.div 
             className="flex flex-col sm:flex-row justify-center gap-5 permanent-visible"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.button 
-              variants={fadeInUp}
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.button 
+        variants={fadeInUp}
               whileHover={buttonHoverEffects.hover}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/marketplace')} 
+        onClick={() => navigate('/marketplace')} 
               className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-200 text-lg shadow-lg"
-            >
-              Browse Marketplace
-            </motion.button>
-            <motion.button 
-              variants={fadeInUp}
+      >
+          Browse Marketplace
+      </motion.button>
+      <motion.button 
+        variants={fadeInUp}
               whileHover={buttonHoverEffects.hover}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/login')} 
+        onClick={() => navigate('/login')} 
               className="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white border-2 border-gray-700 font-medium rounded-xl transition-all duration-200 text-lg shadow-lg"
-            >
-              Join Us Now
-            </motion.button>
-          </motion.div>
-        </motion.div>
-      </motion.section>
+      >
+          Join Us Now
+      </motion.button>
+    </motion.div>
+  </motion.div>
+</motion.section>
 
       {/* Redesigned How Token Flow Works Section */}
       <motion.section 
@@ -391,15 +391,15 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <motion.h2 
+          <motion.h2 
               className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400 mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              How Token Flow Works
-            </motion.h2>
+          >
+            How Token Flow Works
+          </motion.h2>
             <motion.p 
               className="text-xl text-gray-300 max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
@@ -438,7 +438,7 @@ const Home = () => {
                 color: "from-emerald-500 to-teal-600"
               }
             ].map((step, index) => (
-              <motion.div
+              <motion.div 
                 key={index}
                 className="relative group"
                 initial={{ opacity: 0, y: 20 }}
@@ -452,31 +452,31 @@ const Home = () => {
                 {/* Card content */}
                 <div className="relative p-8 rounded-2xl border border-gray-700/50">
                   {/* Icon container */}
-                  <motion.div 
+                <motion.div 
                     className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300`}
-                    whileHover={{ rotate: 5 }}
-                  >
+                  whileHover={{ rotate: 5 }}
+                >
                     {step.icon}
-                  </motion.div>
+                </motion.div>
                   
                   {/* Step number */}
                   <div className="absolute top-4 right-4 text-4xl font-bold text-gray-700/30">
                     {index + 1}
                   </div>
                   
-                  <motion.h3 
+                <motion.h3 
                     className="text-xl font-bold text-white mb-4"
                     whileHover={{ x: 5 }}
                   >
                     {step.title}
-                  </motion.h3>
+                </motion.h3>
                   
-                  <motion.p 
+                <motion.p 
                     className="text-gray-400"
                     whileHover={{ x: 5 }}
                   >
                     {step.description}
-                  </motion.p>
+                </motion.p>
                   
                   {/* Hover effect line */}
                   <motion.div 
@@ -498,104 +498,104 @@ const Home = () => {
       {/* Stats Section with Counter Animation */}
       <motion.section
         className="py-20 bg-gradient-to-b from-gray-900 to-black px-6 content-section"
-        ref={statsRef}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+  ref={statsRef}
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.8 }}
         style={{ zIndex: 10, position: 'relative' }}
-      >
-        <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+>
+  <div className="max-w-6xl mx-auto">
+    {/* Section Header */}
+    <motion.div 
+      className="text-center mb-16"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
             <h2 className="text-3xl md:text-5xl font-bold text-gray-100 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-blue-300 to-purple-300">
-              Measurable Business Outcomes
-            </h2>
+        Measurable Business Outcomes
+      </h2>
             <div className="w-40 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 mx-auto rounded-full mb-6"></div>
             <p className="text-gray-300 max-w-2xl mx-auto text-lg">
               Our enterprise AI platform delivers quantifiable performance improvements across your organization
-            </p>
-          </motion.div>
+      </p>
+    </motion.div>
 
           {/* Stats Grid - Redesigned Card Style */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                value: "50K+",
-                label: "Active Users",
-                description: "Enterprise professionals utilizing our platform",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </svg>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {[
+        {
+          value: "50K+",
+          label: "Active Users",
+          description: "Enterprise professionals utilizing our platform",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
                 ),
                 color: "from-indigo-500 to-blue-600",
                 hoverColor: "hover:from-indigo-600 hover:to-blue-700",
                 accentColor: "rgba(99, 102, 241, 0.15)"
-              },
-              {
-                value: "100+",
-                label: "Integrations",
-                description: "Enterprise software compatibility",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                  </svg>
+        },
+        {
+          value: "100+",
+          label: "Integrations",
+          description: "Enterprise software compatibility",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
                 ),
                 color: "from-purple-500 to-violet-600",
                 hoverColor: "hover:from-purple-600 hover:to-violet-700",
                 accentColor: "rgba(139, 92, 246, 0.15)"
-              },
-              {
-                value: "30%",
-                label: "Efficiency Gain",
-                description: "Measured productivity improvement",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                    <line x1="12" y1="20" x2="12" y2="10"></line>
-                    <line x1="18" y1="20" x2="18" y2="4"></line>
-                    <line x1="6" y1="20" x2="6" y2="16"></line>
-                  </svg>
+        },
+        {
+          value: "30%",
+          label: "Efficiency Gain",
+          description: "Measured productivity improvement",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <line x1="12" y1="20" x2="12" y2="10"></line>
+              <line x1="18" y1="20" x2="18" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="16"></line>
+            </svg>
                 ),
                 color: "from-cyan-500 to-blue-600",
                 hoverColor: "hover:from-cyan-600 hover:to-blue-700",
                 accentColor: "rgba(6, 182, 212, 0.15)"
-              },
-              {
-                value: "$2M+",
-                label: "Client Savings",
-                description: "Monthly operational cost reduction",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                    <rect x="2" y="7" width="20" height="14" rx="2"></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                  </svg>
+        },
+        {
+          value: "$2M+",
+          label: "Client Savings",
+          description: "Monthly operational cost reduction",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
                 ),
                 color: "from-emerald-500 to-teal-600",
                 hoverColor: "hover:from-emerald-600 hover:to-teal-700",
                 accentColor: "rgba(16, 185, 129, 0.15)"
-              }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
+        }
+      ].map((stat, index) => (
+        <motion.div
+          key={index}
                 className="relative"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  delay: index * 0.1, 
-                  duration: 0.7, 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ 
+            delay: index * 0.1, 
+            duration: 0.7, 
                   ease: [0.22, 1, 0.36, 1]
                 }}
               >
@@ -605,18 +605,18 @@ const Home = () => {
                   style={{ background: stat.accentColor }}
                 />
                 
-                <motion.div
+          <motion.div
                   className="group relative bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl border border-gray-700/70 h-full overflow-hidden"
-                  whileHover={{ 
+            whileHover={{ 
                     y: -10,
                     boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3), 0 15px 20px rgba(0, 0, 0, 0.2)",
-                    transition: { 
-                      type: "spring", 
-                      stiffness: 300, 
-                      damping: 20 
-                    }
-                  }}
-                >
+              transition: { 
+                type: "spring", 
+                stiffness: 300, 
+                damping: 20 
+              }
+            }}
+          >
                   {/* Card gradient accent top line */}
                   <div className={`h-1.5 w-full bg-gradient-to-r ${stat.color} transform origin-left transition-all duration-300 group-hover:scale-x-100`}></div>
                   
@@ -624,99 +624,99 @@ const Home = () => {
                     {/* Icon with background circle */}
                     <div className="mb-6 relative">
                       <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${stat.color} ${stat.hoverColor} flex items-center justify-center p-4 text-white shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
-                        {stat.icon}
+                  {stat.icon}
                         {/* Pulse animation for icon */}
                         <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${stat.color} animate-ping opacity-20`} style={{ animationDuration: '3s' }}></div>
-                      </div>
+                </div>
                       
                       {/* Decorative elements */}
                       <div className="absolute top-1/2 right-0 w-24 h-px bg-gradient-to-r from-transparent to-gray-700/70 opacity-50"></div>
-                    </div>
-                    
+              </div>
+              
                     {/* Label with colored accent */}
                     <div className="flex items-center mb-2">
                       <h3 className="text-lg font-semibold text-white bg-clip-text">{stat.label}</h3>
                     </div>
                     
                     {/* Value with animation */}
-                    <motion.div
+              <motion.div
                       className="flex items-baseline mb-2"
                       initial={{ opacity: 0, scale: 0.9 }}
                       whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
+                viewport={{ once: true }}
                       transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
-                    >
-                      <motion.span 
+              >
+                <motion.span 
                         className={`text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${stat.color}`}
-                        whileHover={{
-                          scale: 1.05,
-                          transition: { duration: 0.2 }
-                        }}
-                      >
-                        {stat.value}
-                      </motion.span>
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { duration: 0.2 }
+                  }}
+                >
+                  {stat.value}
+                </motion.span>
                     </motion.div>
                     
                     {/* Description */}
                     <p className="text-gray-400 font-medium mt-2">
-                      {stat.description}
-                    </p>
-                    
+                  {stat.description}
+                </p>
+            
                     {/* Progress indicator */}
                     <div className="mt-6 h-1.5 w-full bg-gray-700/50 rounded-full overflow-hidden">
-                      <motion.div 
+              <motion.div 
                         className={`h-full bg-gradient-to-r ${stat.color} rounded-full`}
                         initial={{ width: "0%" }}
                         whileInView={{ width: "85%" }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.5 + index * 0.1, duration: 1, ease: "easeOut" }}
-                      />
-                    </div>
-                    
+              />
+            </div>
+            
                     {/* View details button */}
                     <div className="mt-6 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                       <button className={`w-full py-2 rounded-lg bg-gradient-to-r ${stat.color} ${stat.hoverColor} text-white text-sm flex items-center justify-center`}>
                         <span>View Details</span>
                         <svg className="w-4 h-4 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
+              </svg>
                       </button>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-          
+          </motion.div>
+        </motion.div>
+      ))}
+    </div>
+    
           {/* Enhanced Background Elements */}
           <div className="relative w-full h-24 mt-16">
-            <motion.div 
+      <motion.div 
               className="absolute hidden lg:block -left-20 -top-40 w-80 h-80 rounded-full opacity-10"
               style={{ background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.4) 0%, transparent 70%)' }}
-              animate={{ 
-                y: [0, -20, 0],
-                scale: [1, 1.05, 1]
-              }}
-              transition={{ 
-                repeat: Infinity,
-                duration: 15,
-                ease: "easeInOut" 
-              }}
-            />
-            <motion.div 
+        animate={{ 
+          y: [0, -20, 0],
+          scale: [1, 1.05, 1]
+        }}
+        transition={{ 
+          repeat: Infinity,
+          duration: 15,
+          ease: "easeInOut" 
+        }}
+      />
+      <motion.div 
               className="absolute hidden lg:block right-10 bottom-0 w-60 h-60 rounded-full opacity-10"
               style={{ background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.4) 0%, transparent 70%)' }}
-              animate={{ 
-                y: [0, 15, 0],
-                x: [0, 10, 0],
-                scale: [1, 1.03, 1]
-              }}
-              transition={{ 
-                repeat: Infinity,
-                duration: 20,
-                ease: "easeInOut" 
-              }}
-            />
+        animate={{ 
+          y: [0, 15, 0],
+          x: [0, 10, 0],
+          scale: [1, 1.03, 1]
+        }}
+        transition={{ 
+          repeat: Infinity,
+          duration: 20,
+          ease: "easeInOut" 
+        }}
+      />
             
             {/* Decorative lines */}
             <div className="absolute inset-y-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent"></div>
@@ -734,9 +734,9 @@ const Home = () => {
                 </svg>
               </span>
             </button>
-          </div>
-        </div>
-      </motion.section>
+    </div>
+  </div>
+</motion.section>
 
       {/* Featured Tokens with Staggered Animation - Performance Optimized */}
       <motion.section 
@@ -744,7 +744,7 @@ const Home = () => {
         ref={tokensRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5 }}
         style={{ zIndex: 10, position: 'relative' }}
       >
         {/* Static grid background instead of animated */}
@@ -774,65 +774,65 @@ const Home = () => {
           
           <h2 className="text-3xl md:text-5xl font-bold text-center text-white mb-12 permanent-visible">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">
-              Featured Tokens
+            Featured Tokens
             </span>
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { 
-                platform: "ChatGPT", 
-                discount: "25% off", 
-                icon: <FaRobot />, 
+  { 
+    platform: "ChatGPT", 
+    discount: "25% off", 
+    icon: <FaRobot />, 
                 color: "from-emerald-500 to-teal-500",
                 baseColor: "#10b981",
                 textColor: "text-emerald-500"
-              },
-              { 
-                platform: "Claude", 
-                discount: "30% off", 
-                icon: <FaSmile />, 
+  },
+  { 
+    platform: "Claude", 
+    discount: "30% off", 
+    icon: <FaSmile />, 
                 color: "from-violet-500 to-purple-500",
                 baseColor: "#8b5cf6",
                 textColor: "text-violet-500"
-              },
-              { 
-                platform: "Gemini", 
-                discount: "40% off", 
-                icon: <FaStar />, 
+  },
+  { 
+    platform: "Gemini", 
+    discount: "40% off", 
+    icon: <FaStar />, 
                 color: "from-blue-500 to-indigo-500",
                 baseColor: "#3b82f6",
                 textColor: "text-blue-500"
-              },
-              { 
-                platform: "Anthropic", 
-                discount: "20% off", 
-                icon: <FaBrain />, 
+  },
+  { 
+    platform: "Anthropic", 
+    discount: "20% off", 
+    icon: <FaBrain />, 
                 color: "from-pink-500 to-rose-500",
                 baseColor: "#ec4899",
                 textColor: "text-pink-500"
-              },
-              { 
-                platform: "Bard", 
-                discount: "35% off", 
-                icon: <FaPen />, 
+  },
+  { 
+    platform: "Bard", 
+    discount: "35% off", 
+    icon: <FaPen />, 
                 color: "from-amber-500 to-yellow-500",
                 baseColor: "#f59e0b",
                 textColor: "text-amber-500"
-              },
-              { 
-                platform: "Llama", 
-                discount: "15% off", 
-                icon: <FaMagic />, 
+  },
+  { 
+    platform: "Llama", 
+    discount: "15% off", 
+    icon: <FaMagic />, 
                 color: "from-indigo-500 to-blue-500",
                 baseColor: "#6366f1",
                 textColor: "text-indigo-500"
-              }
-            ].map((item, index) => (
+  }
+].map((item, index) => (
               <div 
                 key={index}
                 className="group overflow-hidden cursor-pointer relative h-[280px] sm:h-[320px] bg-gray-800 rounded-2xl border border-gray-700/50 shadow-lg will-change-transform permanent-visible"
-                style={{
+                    style={{
                   transform: "translateZ(0)",
                   boxShadow: `0 0 20px 0 rgba(0,0,0,0.5)`
                 }}
@@ -852,7 +852,7 @@ const Home = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-2xl font-bold text-white permanent-visible mb-1">
-                      {item.platform}
+                    {item.platform}
                     </h3>
                     <div className="flex items-center">
                       <div className="flex">
@@ -874,17 +874,17 @@ const Home = () => {
                       <span className="text-gray-400 text-sm">Price</span>
                       <div className="flex items-baseline">
                         <span className="text-3xl font-bold text-white mr-2">
-                          {item.discount}
-                        </span>
+                      {item.discount}
+                      </span>
                         <span className="text-gray-400 line-through text-sm">Regular</span>
-                      </div>
-                    </div>
+                  </div>
+                </div>
                     <div 
                       className={`px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.color} text-white transform transition-transform duration-300 group-hover:scale-105`}
                     >
                       Most Popular
-                    </div>
-                  </div>
+          </div>
+        </div>
                   
                   <div className="mt-6 space-y-4">
                     <div className="flex items-center text-gray-300">
@@ -899,8 +899,8 @@ const Home = () => {
                       </svg>
                       <span>No expiration date</span>
                     </div>
-                  </div>
-                  
+        </div>
+
                   <button 
                     className={`mt-8 w-full py-3 rounded-xl text-white font-medium bg-gradient-to-r ${item.color} relative overflow-hidden transform transition-all duration-300 group-hover:scale-[1.02]`}
                     style={{
@@ -912,8 +912,8 @@ const Home = () => {
                       View Token Details
                       <svg className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                      </svg>
-                    </span>
+                </svg>
+              </span>
                   </button>
                 </div>
               </div>
@@ -1074,7 +1074,7 @@ const Home = () => {
                   <div className="flex items-center mb-3">
                     <div className={`w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-br ${model.color} text-white`}>
                       {model.icon}
-                    </div>
+                  </div>
                     <div className="ml-3">
                       <h3 className="text-lg font-semibold text-white">{model.name}</h3>
                       <p className="text-xs text-gray-400">{model.subtitle}</p>
@@ -1095,8 +1095,8 @@ const Home = () => {
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full bg-${model.accent}-900/20 text-${model.accent}-400`}>
                       Available
-                    </span>
-                  </div>
+                  </span>
+                </div>
                 </div>
                 
                 {/* Hover gradient overlay */}
@@ -1105,7 +1105,7 @@ const Home = () => {
                 }} />
               </div>
             ))}
-          </div>
+        </div>
           
           {/* View all platforms button */}
           <div className="flex justify-center mt-12">
@@ -1167,7 +1167,7 @@ const Home = () => {
             className="text-3xl md:text-5xl font-bold text-center text-white mb-12 permanent-visible"
           >
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">
-              Frequently Asked Questions
+            Frequently Asked Questions
             </span>
           </h2>
           
@@ -1250,11 +1250,11 @@ const OptimizedFAQItem = ({ question, answer, index }) => {
         >
           <svg 
             className="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </button>

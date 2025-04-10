@@ -69,9 +69,9 @@ const Footer = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-500/30 blur-md rounded-full"></div>
                 <svg className="relative h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21.4 7.5c.8.8.8 2.1 0 2.8l-9 9c-.8.8-2.1.8-2.8 0l-6-6c-.8-.8-.8-2.1 0-2.8.8-.8 2.1-.8 2.8 0L12 13.2l7.5-7.5c.8-.8 2.1-.8 2.9 0z"></path>
-                </svg>
-              </div>
+                <path d="M21.4 7.5c.8.8.8 2.1 0 2.8l-9 9c-.8.8-2.1.8-2.8 0l-6-6c-.8-.8-.8-2.1 0-2.8.8-.8 2.1-.8 2.8 0L12 13.2l7.5-7.5c.8-.8 2.1-.8 2.9 0z"></path>
+              </svg>
+            </div>
               <span className="ml-2 text-xl font-bold">
                 <span className="text-white">Token</span>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">Flow</span>
@@ -109,7 +109,7 @@ const Footer = () => {
                   <span className="sr-only">{social.name}</span>
                   <svg className="h-5 w-5 relative" fill="currentColor" viewBox="0 0 24 24">
                     <path d={social.icon}></path>
-                  </svg>
+                </svg>
                 </motion.a>
               ))}
             </motion.div>
@@ -178,7 +178,7 @@ const Footer = () => {
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                       </motion.svg>
-                    </Link>
+                </Link>
                   </motion.li>
                 ))}
               </motion.ul>
@@ -227,20 +227,20 @@ const Footer = () => {
                 >
                   Get the latest news and special offers delivered directly to your inbox
                 </motion.p>
-              </div>
+            </div>
               <div className="md:w-1/2 w-full">
                 <form className="flex flex-col sm:flex-row gap-3">
                   <div className="flex-grow">
-                    <label htmlFor="email-address" className="sr-only">Email address</label>
-                    <input
-                      id="email-address"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
+                <label htmlFor="email-address" className="sr-only">Email address</label>
+                <input
+                  id="email-address"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
                       className="w-full px-5 py-3 bg-white/10 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 text-white"
-                      placeholder="Enter your email"
-                    />
+                  placeholder="Enter your email"
+                />
                   </div>
                   <motion.div
                     whileHover={{ scale: 1.03 }}
@@ -249,14 +249,14 @@ const Footer = () => {
                     <button
                       type="submit"
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 border border-transparent rounded-lg py-3 px-5 flex items-center justify-center text-base font-medium text-white hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 shadow-lg shadow-blue-500/20"
-                    >
-                      Subscribe
-                    </button>
+                  >
+                    Subscribe
+                  </button>
                   </motion.div>
-                </form>
-              </div>
+              </form>
             </div>
           </div>
+        </div>
         </motion.div>
       </div>
 
@@ -276,7 +276,7 @@ const Footer = () => {
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+            </Link>
             ))}
           </div>
           <motion.p 
