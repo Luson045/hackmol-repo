@@ -10,7 +10,7 @@ import Market from './pages/Market';
 import AdminDashboard from './admin_dashboard/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
-import Footer from './components/Footer';
+// import Footer from './components/Footer';
 import ChatInterface from './chat/ChatInterface';
 import './css/ChatInterface.css';
 import PaymentGateway from './pages/payment'
@@ -60,7 +60,7 @@ function App() {
               element={<PrivateRoute><ChatInterface/></PrivateRoute>} />
             <Route path="/" element={<Home />} />
             </Routes>
-            <Footer/>
+            {/* <Footer/> */}
           </div>
         </div>
       </Router>
