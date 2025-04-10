@@ -10,7 +10,7 @@ const phrases = [
   "Join the Token Flow Ecosystem",
   "Smart Trading, Better Savings"
 ];
-
+import Footer from '../components/Footer';
 
 const Home = () => {
   const {user, isAuthenticated } = useContext(AuthContext);
@@ -1216,6 +1216,7 @@ const Home = () => {
             </button>
           </div>
         </div>
+      <Footer/>
       </section>
     </div>
   );

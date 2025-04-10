@@ -59,7 +59,7 @@ function App() {
               element={<PrivateRoute><ChatInterface/></PrivateRoute>} />
             <Route path="/" element={<Home />} />
             </Routes>
-            <Footer/>
+         
           </div>
         </div>
       </Router>
