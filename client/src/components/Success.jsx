@@ -76,20 +76,30 @@ const TestimonialWall = () => {
   }, [visibleTestimonials.length]);
   
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-gray-900 dark:to-indigo-900">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-16 px-4 bg-gradient-to-br from-black to-gray-900 relative z-10 content-section">
+      {/* Add subtle grid pattern for visibility */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: `
+          linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px)
+        `,
+        backgroundSize: '50px 50px',
+        maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
+      }} />
+      
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white permanent-visible">
             What Our Users Are Saying
           </h2>
-          <div className="h-1 w-24 bg-indigo-600 mx-auto rounded-full"></div>
+          <div className="h-1 w-24 bg-indigo-500 mx-auto rounded-full"></div>
         </div>
         
         {loading && (
           <div className="flex justify-center items-center h-64">
             <div className="relative">
-              <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-              <div className="absolute inset-0 flex items-center justify-center text-indigo-600 font-medium">
+              <div className="w-16 h-16 border-4 border-indigo-800 border-t-indigo-400 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 flex items-center justify-center text-indigo-400 font-medium">
                 <span className="text-sm">Loading</span>
               </div>
             </div>
@@ -100,7 +110,7 @@ const TestimonialWall = () => {
           {visibleTestimonials.map((item, index) => (
             <div
               key={index}
-              className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition-all duration-500 ${
+              className={`bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden transform transition-all duration-500 border border-gray-700 permanent-visible ${
                 visibleTestimonials.length === 6 ? 
                   index === activeIndex ? 
                     'scale-105 ring-2 ring-indigo-500 shadow-xl z-10' : 
@@ -110,7 +120,10 @@ const TestimonialWall = () => {
               style={{ 
                 animationDelay: `${index * 0.2}s`,
                 opacity: visibleTestimonials.length < 6 ? 0 : 1,
-                animation: visibleTestimonials.length < 6 ? `fadeInUp 0.5s ease-out ${index * 0.2}s forwards` : ''
+                animation: visibleTestimonials.length < 6 ? `fadeInUp 0.5s ease-out ${index * 0.2}s forwards` : '',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                willChange: 'transform'
               }}
             >
               <div className={`h-2 ${
@@ -123,33 +136,33 @@ const TestimonialWall = () => {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-gray-700"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-gray-800 flex items-center justify-center">
                       <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                       </svg>
                     </div>
                   </div>
                   <div className="ml-4">
-                    <h4 className="font-bold text-gray-900 dark:text-white text-lg">{item.name}</h4>
-                    <p className="text-indigo-600 dark:text-indigo-400 text-sm">{item.handle}</p>
+                    <h4 className="font-bold text-white text-lg permanent-visible">{item.name}</h4>
+                    <p className="text-indigo-400 text-sm">{item.handle}</p>
                   </div>
                 </div>
                 <div className="relative">
-                  <svg className="absolute -top-2 -left-2 w-8 h-8 text-indigo-200 dark:text-indigo-800 opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="absolute -top-2 -left-2 w-8 h-8 text-indigo-700 opacity-50" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                   </svg>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed relative z-10">
+                  <p className="text-gray-300 leading-relaxed relative z-10 permanent-visible">
                     {item.text}
                   </p>
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                   <div className="flex space-x-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-900 text-indigo-200">
                       Verified
                     </span>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-200">
                       {index % 2 === 0 ? 'Buyer' : 'Seller'}
                     </span>
                   </div>
@@ -181,6 +194,11 @@ const TestimonialWall = () => {
           
           .animate-fade-in-up {
             animation: fadeInUp 0.5s ease-out forwards;
+          }
+          
+          .permanent-visible {
+            visibility: visible !important;
+            opacity: 1 !important;
           }
         `}</style>
       </div>
