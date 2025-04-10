@@ -141,7 +141,7 @@ Thanks for checking us out 💙
 
 ## 🛠 Tech Stack
 
-- *Frontend:* Next.js + Tailwind CSS
+- *Frontend:* React
 - *Backend:* Node.js + Express
 - *Database:* MongoDB
 - *Payments:* UPI via Razorpay (or similar)

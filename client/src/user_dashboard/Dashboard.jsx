@@ -29,6 +29,7 @@ import ChatInterface from '../chat/ChatInterface';
 import '../css/Dashboard.css';
 import '../css/ChatInterface.css';
 import Settings from './Settings';
+import PaymentGateway from '../pages/payment'
 
 // Register Chart.js components
 ChartJS.register(
@@ -571,6 +572,14 @@ const Dashboard = () => {
             <FiKey /> API Keys
           </motion.div>
           <motion.div 
+            className={`sidebar-menu-item ${activeTab === 'payment' ? 'active' : ''}`}
+            onClick={() => handleTabChange('payment')}
+            whileHover={{ x: 5 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FiHome /> Add Funds
+          </motion.div>
+          <motion.div 
             className={`sidebar-menu-item ${activeTab === 'marketplace' ? 'active' : ''}`}
             onClick={() => handleTabChange('marketplace')}
             whileHover={{ x: 5 }}
@@ -1101,6 +1110,9 @@ const Dashboard = () => {
 
         {activeTab === 'settings' && (
           <Settings />
+        )}
+        {activeTab === 'payment' && (
+          <PaymentGateway/>
         )}
 
         {/* Add API Key Modal */}
