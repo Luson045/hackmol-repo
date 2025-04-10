@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 const { auth } = require('../middleware/auth');
 const { encrypt, decrypt } = require('../utils/crypto');
 
+// Get encrypted API keys (with optional decryption for internal use)
 router.get('/api-keys', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('api_keys');
@@ -14,7 +16,7 @@ router.get('/api-keys', auth, async (req, res) => {
     const keys = user.api_keys.map(k => ({
       _id: k._id,
       name: k.name,
-      key: decrypt(k.key),
+      key: decrypt(k.key), // You can omit this if you want to hide the actual key
       tokens: k.tokens,
       available: k.available,
       createdAt: k.createdAt
@@ -151,10 +153,33 @@ router.delete('/api-keys/:id', auth, async (req, res) => {
   }
 });
 
-//add transaction toure
+router.get('/transactions', auth, async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ buyer: req.user._id })
+      .populate('seller', 'name email')
+      .populate('listing', 'apiKeyName pricePerToken')
+      .sort({ createdAt: -1 });
 
+    res.json(transactions);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
-//add sales route
+router.get('/sales', auth, async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ seller: req.user._id })
+      .populate('buyer', 'name email')
+      .populate('listing', 'apiKeyName pricePerToken')
+      .sort({ createdAt: -1 });
+
+    res.json(transactions);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 router.post('/use-token', auth, async (req, res) => {
   try {

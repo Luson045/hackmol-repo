@@ -1,4 +1,3 @@
-// routes/marketplace.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -7,7 +6,7 @@ const Transaction = require('../models/Transaction');
 const { auth } = require('../middleware/auth');
 const mongoose = require('mongoose');
 
-// Get all listings
+//egt
 router.get('/listings', async (req, res) => {
   try {
     const listings = await Listing.find({ isActive: true })
