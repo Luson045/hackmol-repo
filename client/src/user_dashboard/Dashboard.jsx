@@ -718,7 +718,7 @@ const Dashboard = () => {
                   <div className="stats-content">
                     <div className="stats-title">User Balance</div>
                     <div className="stats-value">
-                      <CountUp end={userAmount} prefix="$" decimals={2} duration={2.5} />
+                      <CountUp end={userAmount} prefix="Rs " decimals={2} duration={2.5} />
                     </div>
                     <div className={`stats-trend ${weeklyGrowth > 0 ? 'positive' : 'negative'}`}>
                       {weeklyGrowth > 0 ? <BsArrowUpRight /> : <BsArrowDownRight />} {Math.abs(weeklyGrowth)}% this week

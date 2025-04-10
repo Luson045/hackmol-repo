@@ -164,7 +164,7 @@ export default function PaymentGateway() {
                 <div className="absolute inset-0 rounded-lg pointer-events-none shadow-glow opacity-0 transition-opacity duration-300"></div>
               </div>
               <p className="mt-2 text-xs text-slate-400">
-                Enter your UPI ID to complete the payment of <span className="text-emerald-400 font-semibold">$99.99</span>
+                Enter your UPI ID to complete the payment of <span className="text-emerald-400 font-semibold">Rs 99.99</span>
               </p>
             </div>
 
@@ -211,7 +211,7 @@ export default function PaymentGateway() {
                 <div className="absolute inset-0 rounded-lg pointer-events-none shadow-glow opacity-0 transition-opacity duration-300"></div>
               </div>
               <p className="mt-2 text-xs text-slate-400">
-                Enter your UPI ID to complete the payment of <span className="text-emerald-400 font-semibold">$99.99</span>
+                Enter your UPI ID to complete the payment of <span className="text-emerald-400 font-semibold">Rs 99.99</span>
               </p>
             </div>
 
@@ -287,7 +287,7 @@ export default function PaymentGateway() {
               
               <div className="bg-slate-700/50 p-6 rounded-xl border border-slate-600 hover:border-blue-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5">
                 <h3 className="font-semibold mb-2">Account Balance</h3>
-                <p className="text-slate-300 text-sm">$1,245.00</p>
+                <p className="text-slate-300 text-sm">Rs 1,245.00</p>
                 <p className="text-xs text-slate-400 mt-2">Updated today</p>
               </div>
               
