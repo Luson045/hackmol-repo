@@ -1,148 +1,164 @@
-// client/src/components/layout/Navbar.jsx
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom'; // Use NavLink for active styling
-import { AuthContext } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
 
 const Navbar = () => {
-    const { isAuthenticated, user, logout } = useContext(AuthContext);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const navRef = useRef(null); // Ref for detecting clicks outside
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [logoAnimated, setLogoAnimated] = useState(false);
 
-    // Close mobile menu if clicked outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (navRef.current && !navRef.current.contains(event.target)) {
-                setIsMobileMenuOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+  // Handle scroll effect for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
 
+    window.addEventListener('scroll', handleScroll);
+    
+    // Start logo animation after component mounts
+    setTimeout(() => {
+      setLogoAnimated(true);
+    }, 500);
+    
+    // Cleanup listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
-    const linkClasses = "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out";
-    const activeLinkClasses = "bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium";
-    const mobileLinkClasses = "block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium transition duration-150 ease-in-out";
-    const mobileActiveLinkClasses = "block bg-gray-900 text-white px-3 py-2 rounded-md text-base font-medium";
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
-    const getNavLinkClass = ({ isActive }) => isActive ? activeLinkClasses : linkClasses;
-    const getMobileNavLinkClass = ({ isActive }) => isActive ? mobileActiveLinkClasses : mobileLinkClasses;
-
-    // --- Links for Authenticated Users (Desktop) ---
-    const authLinks = (
-        <>
-            <NavLink to="/dashboard" className={getNavLinkClass}>Dashboard</NavLink>
-            <NavLink to="/marketplace" className={getNavLinkClass}>Marketplace</NavLink>
-            {/* --- Added Chat Link Here --- */}
-            <NavLink to="/chat" className={getNavLinkClass}>Chat</NavLink>
-            {/* --- End Added Chat Link --- */}
-            {user && user.role === 'admin' && (
-                <NavLink to="/admin" className={getNavLinkClass}>Admin</NavLink>
-            )}
-            <button
-                onClick={() => {
-                    logout();
-                    setIsMobileMenuOpen(false); // Close menu on logout
-                }}
-                className={`${linkClasses} bg-transparent border-none cursor-pointer w-full md:w-auto text-left`} // Ensure button looks like link
-            >
-                Logout
-            </button>
-        </>
-    );
-
-    // --- Links for Guest Users (Desktop) ---
-    const guestLinks = (
-        <>
-            <NavLink to="/login" className={getNavLinkClass}>Login / Register</NavLink>
-        </>
-    );
-
-    // --- Links for Authenticated Users (Mobile) ---
-    const mobileAuthLinks = (
-        <>
-            <NavLink to="/dashboard" className={getMobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Dashboard</NavLink>
-            <NavLink to="/marketplace" className={getMobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Marketplace</NavLink>
-            {/* --- Added Chat Link Here --- */}
-            <NavLink to="/chat" className={getMobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Chat</NavLink>
-            {/* --- End Added Chat Link --- */}
-            {user && user.role === 'admin' && (
-                <NavLink to="/admin" className={getMobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Admin</NavLink>
-            )}
-            <button
-                onClick={() => {
-                    logout();
-                    setIsMobileMenuOpen(false); // Close menu on logout
-                }}
-                className={`${mobileLinkClasses} bg-transparent border-none cursor-pointer w-full text-left`}
-            >
-                Logout
-            </button>
-        </>
-    );
-
-    // --- Links for Guest Users (Mobile) ---
-    const mobileGuestLinks = (
-        <>
-            <NavLink to="/login" className={getMobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Login / Register</NavLink>
-        </>
-    );
-
-
-    return (
-      <>
-        <nav ref={navRef} className="bg-gray-800 fixed top-0 left-0 right-0 z-50 shadow-lg">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo/Brand */}
-                    <div className="flex-shrink-0">
-                        <Link to="/" className="text-white text-xl font-bold hover:text-gray-300">
-                            Token Marketplace
-                        </Link>
-                    </div>
-
-                    {/* Desktop Menu Links */}
-                    <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4">
-                            {isAuthenticated ? authLinks : guestLinks}
-                        </div>
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <div className="-mr-2 flex md:hidden">
-                        <button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            type="button"
-                            className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                            aria-controls="mobile-menu"
-                            aria-expanded={isMobileMenuOpen ? 'true' : 'false'}
-                        >
-                            <span className="sr-only">Open main menu</span>
-                            {/* Icon when menu is closed (Hamburger) */}
-                            <svg className={`${isMobileMenuOpen ? 'hidden' : 'block'} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                            {/* Icon when menu is open (Close) */}
-                            <svg className={`${isMobileMenuOpen ? 'block' : 'hidden'} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+  return (
+    <header className={`fixed w-full z-50 transition-all duration-300 ${
+      scrolled 
+        ? 'bg-white dark:bg-gray-900 shadow-lg py-2' 
+        : 'bg-transparent py-4'
+    }`}>
+      <div className="container mx-auto px-4 flex items-center justify-between">
+        {/* Logo */}
+        <div className="relative z-10">
+          <div className={`flex items-center transition-all duration-700 ${
+            logoAnimated ? 'opacity-100 transform translate-x-0' : 'opacity-0 transform -translate-x-4'
+          }`}>
+            <div className={`mr-2 text-xl transition-all duration-500 ${
+              scrolled ? 'text-indigo-600 dark:text-indigo-400' : 'text-white dark:text-indigo-300'
+            } ${logoAnimated ? 'animate-bounce' : ''}`}>
+              
             </div>
-
-            {/* Mobile Menu, show/hide based on menu state. */}
-            <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:hidden absolute top-full left-0 right-0 bg-gray-800 bg-opacity-95 backdrop-blur-sm pb-3`} id="mobile-menu">
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    {isAuthenticated ? mobileAuthLinks : mobileGuestLinks}
-                </div>
+            <div className="font-bold text-xl md:text-2xl">
+              
+              <span className={`transition-colors duration-300 ${
+                scrolled ? 'text-gray-800 dark:text-gray-200' : 'text-gray-100 dark:text-gray-200'
+              }`}> ⚘ Token</span>
+              <span className={`transition-colors duration-300 ${
+                scrolled ? 'text-indigo-600 dark:text-indigo-400' : 'text-indigo-300 dark:text-indigo-300'
+              }`}>Flow</span>
             </div>
+          </div>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:block">
+          <ul className="flex space-x-8">
+            {['Home', 'Marketplace', 'About', 'Resources'].map((item, index) => (
+              <li key={index}>
+                <a 
+                  href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} 
+                  className={`relative font-medium text-sm tracking-wide transition-colors duration-300
+                    ${scrolled 
+                      ? 'text-gray-800 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400' 
+                      : 'text-white hover:text-indigo-300 dark:text-gray-200 dark:hover:text-indigo-300'
+                    }
+                    after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-indigo-500
+                    after:transition-all after:duration-300 hover:after:w-full
+                  `}
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
+          </ul>
         </nav>
-        <br/><br/>
-        </>
-    );
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden z-20 relative w-10 h-10 focus:outline-none"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+        >
+          <div className="absolute w-5 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+            <span 
+              className={`absolute h-0.5 w-5 bg-current transform transition duration-300 ease-in-out ${
+                scrolled ? 'bg-gray-800 dark:bg-gray-200' : 'bg-white dark:bg-gray-200'
+              } ${mobileMenuOpen ? 'rotate-45 delay-200' : '-translate-y-1.5'}`}
+            ></span>
+            <span 
+              className={`absolute h-0.5 bg-current transform transition-all duration-200 ease-in-out ${
+                scrolled ? 'bg-gray-800 dark:bg-gray-200' : 'bg-white dark:bg-gray-200'
+              } ${mobileMenuOpen ? 'w-0 opacity-0' : 'w-5 delay-200'}`}
+            ></span>
+            <span 
+              className={`absolute h-0.5 w-5 bg-current transform transition duration-300 ease-in-out ${
+                scrolled ? 'bg-gray-800 dark:bg-gray-200' : 'bg-white dark:bg-gray-200'
+              } ${mobileMenuOpen ? '-rotate-45 delay-200' : 'translate-y-1.5'}`}
+            ></span>
+          </div>
+        </button>
+
+        {/* Mobile Navigation Menu */}
+        <nav 
+          className={`fixed top-0 left-0 w-full h-screen bg-indigo-600 dark:bg-gray-800 z-10 transform transition-transform duration-300 ease-in-out ${
+            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col items-center justify-center h-full">
+            <ul className="flex flex-col items-center space-y-8">
+              {['Home', 'Marketplace', 'About', 'Resources'].map((item, index) => (
+                <li key={index} className="overflow-hidden">
+                  <a 
+                    href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                    className="text-white text-2xl font-medium hover:text-indigo-200 transition-colors duration-300"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="absolute bottom-10 flex space-x-6">
+              {['Facebook', 'Twitter', 'Instagram'].map((social, index) => (
+                <a 
+                  key={index}
+                  href={`https://${social.toLowerCase()}.com`} 
+                  className="text-white hover:text-indigo-200 transition-colors duration-300"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {social === 'Facebook' ? (
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                    </svg>
+                  ) : social === 'Twitter' ? (
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                    </svg>
+                  ) : (
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+  );
 };
 
 export default Navbar;

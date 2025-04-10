@@ -793,8 +793,8 @@ const Home = () => {
             viewport={{ once: true }}
           >
             {[
-              "StreamFlix", "MusicOwl", "LearnBear", "GamingBull", 
-              "FitFox", "NewsOwl", "CodeDeer", "PodcastRaven"
+              " ChatGPT", "Claude", "Gemini", "Copilot", 
+              "LLaMA", "Groq Chat", " Mistral ", " Perplexity AI"
             ].map((platform, index) => (
               <motion.div
                 key={index}
