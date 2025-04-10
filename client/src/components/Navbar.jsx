@@ -44,12 +44,8 @@ const Navbar = () => {
           <div className={`flex items-center transition-all duration-700 ${
             logoAnimated ? 'opacity-100 transform translate-x-0' : 'opacity-0 transform -translate-x-4'
           }`}>
-            <div className={`mr-2 text-xl transition-all duration-500 ${
-              scrolled ? 'text-indigo-600 dark:text-indigo-400' : 'text-white dark:text-indigo-300'
-            } ${logoAnimated ? 'animate-bounce' : ''}`}>
-              
-            </div>
-            <div className="font-bold text-xl md:text-2xl">
+            
+            <div className="font-bold md:pl-8 pl-5 text-xl md:text-2xl">
               
               <span className={`transition-colors duration-300 ${
                 scrolled ? 'text-gray-800 dark:text-gray-200' : 'text-gray-100 dark:text-gray-200'
@@ -62,7 +58,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:block">
+        <nav className="hidden pr-10 md:block">
           <ul className="flex space-x-8">
             {['Home', 'Marketplace', 'About', 'Resources'].map((item, index) => (
               <li key={index}>
@@ -86,7 +82,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden z-20 relative w-10 h-10 focus:outline-none"
+          className="md:hidden z-20 mr-5 relative w-10 h-10 focus:outline-none"
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
         >
