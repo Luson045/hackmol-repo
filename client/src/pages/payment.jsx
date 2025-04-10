@@ -2,14 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Check, ArrowRight, Loader2, CreditCard } from 'lucide-react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function PaymentGateway() {
+  const navigate = useNavigate();
   const [paymentStep, setPaymentStep] = useState('select'); // select, upi, processing, success
   const [countdown, setCountdown] = useState(3);
   const [hoverOption, setHoverOption] = useState(null); // Track which option is being hovered
   const [upiId, setUpiId] = useState('');
   const [amnt, setAmnt] = useState(0);
-  const { user } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
   // Simulate payment process when UPI payment is submitted
   const handleUpiPayment = (e) => {
@@ -26,18 +28,25 @@ export default function PaymentGateway() {
 
   const handleNoMoneyPayment = async (e) => {
     e.preventDefault();
-    const res = await axios.post('/api/users/payment', {
-      userId: user?._id,
-      amount: amnt
-    })  
-    .then(
-      setPaymentStep('processing')
-    ).then(
-    setTimeout(() => {
-      setPaymentStep('success');
-    }, 2000))
+    if (!user) return;
+  
+    try {
+      await axios.post('/api/users/payment', {
+        userId: user.id?user.id:user._id,
+        amount: amnt
+      });
+  
+      setPaymentStep('processing');
+      
+      setTimeout(() => {
+        setPaymentStep('success');
+      }, 2000);
+  
+    } catch (err) {
+      console.error("Payment failed:", err);
+    }
   };
-
+  
   // Countdown for redirect after successful payment
   useEffect(() => {
     if (paymentStep === 'success' && countdown > 0) {
@@ -49,7 +58,7 @@ export default function PaymentGateway() {
     
     // Redirect to dashboard when countdown reaches 0
     if (paymentStep === 'success' && countdown === 0) {
-      setPaymentStep('dashboard');
+      window.location.reload();
     }
   }, [paymentStep, countdown]);
 
