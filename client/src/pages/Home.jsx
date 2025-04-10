@@ -696,7 +696,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Featured Tokens with Staggered Animation */}
+      {/* Featured Tokens with Staggered Animation - Completely Redesigned */}
       <motion.section 
         className="py-16 px-4 bg-gradient-to-b from-black to-gray-900 content-section"
         ref={tokensRef}
@@ -706,136 +706,247 @@ const Home = () => {
         transition={{ duration: 0.7 }}
         style={{ zIndex: 10, position: 'relative' }}
       >
-        <div className="max-w-6xl mx-auto">
+        {/* Background grid for section */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
+        }} />
+        
+        <div className="max-w-6xl mx-auto relative">
+          {/* Floating orbs in background */}
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={`token-orb-${i}`}
+              className="absolute rounded-full blur-3xl opacity-20"
+              style={{
+                width: `${Math.random() * 300 + 200}px`,
+                height: `${Math.random() * 300 + 200}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                background: `radial-gradient(circle at center, 
+                  rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 255, 0.3) 0%, 
+                  transparent 70%)`,
+                zIndex: 0
+              }}
+              animate={{
+                x: [0, Math.random() * 80 - 40],
+                y: [0, Math.random() * 80 - 40],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: Math.random() * 10 + 10,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+          
           <motion.h2 
-            className="text-3xl font-bold text-center text-white mb-12"
+            className="text-3xl md:text-5xl font-bold text-center text-white mb-12 permanent-visible"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Featured Tokens
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">
+              Featured Tokens
+            </span>
           </motion.h2>
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { 
                 platform: "ChatGPT", 
                 discount: "25% off", 
                 icon: <FaRobot />, 
-                color: "from-green-400 to-green-600" 
+                color: "from-emerald-500 to-teal-500",
+                bgColor: "rgba(16, 185, 129, 0.05)",
+                hue: 160
               },
               { 
                 platform: "Claude", 
                 discount: "30% off", 
                 icon: <FaSmile />, 
-                color: "from-purple-400 to-purple-600" 
+                color: "from-violet-500 to-purple-500",
+                bgColor: "rgba(139, 92, 246, 0.05)",
+                hue: 270
               },
               { 
                 platform: "Gemini", 
                 discount: "40% off", 
                 icon: <FaStar />, 
-                color: "from-blue-400 to-blue-600" 
+                color: "from-blue-500 to-indigo-500",
+                bgColor: "rgba(59, 130, 246, 0.05)",
+                hue: 220
               },
               { 
                 platform: "Anthropic", 
                 discount: "20% off", 
                 icon: <FaBrain />, 
-                color: "from-red-400 to-red-600" 
+                color: "from-pink-500 to-rose-500",
+                bgColor: "rgba(236, 72, 153, 0.05)",
+                hue: 330
               },
               { 
                 platform: "Bard", 
                 discount: "35% off", 
                 icon: <FaPen />, 
-                color: "from-yellow-400 to-yellow-600" 
+                color: "from-amber-500 to-yellow-500",
+                bgColor: "rgba(245, 158, 11, 0.05)",
+                hue: 45
               },
               { 
                 platform: "Llama", 
                 discount: "15% off", 
                 icon: <FaMagic />, 
-                color: "from-indigo-400 to-indigo-600" 
+                color: "from-indigo-500 to-blue-500",
+                bgColor: "rgba(99, 102, 241, 0.05)",
+                hue: 240
               }
             ].map((item, index) => (
               <motion.div 
                 key={index}
-                className="bg-gray-800 rounded-xl overflow-hidden shadow-md group cursor-pointer"
+                className="group overflow-hidden cursor-pointer relative h-[280px] sm:h-[320px] permanent-visible"
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
                 custom={index}
-                whileHover={{ 
-                  y: -10,
-                  transition: { 
-                    type: "spring", 
-                    stiffness: 300, 
-                    damping: 15 
-                  }
+                style={{
+                  transformStyle: "preserve-3d",
+                  perspective: "1000px"
                 }}
               >
+                {/* Background gradient animation */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl overflow-hidden"
+                  animate={{
+                    background: [
+                      `linear-gradient(45deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
+                      `linear-gradient(135deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
+                      `linear-gradient(225deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
+                      `linear-gradient(315deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
+                      `linear-gradient(45deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`
+                    ]
+                  }}
+                  transition={{
+                    duration: 15,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                
+                {/* Card content container */}
                 <motion.div 
-                  className={`bg-gradient-to-r ${item.color} p-6 flex items-center justify-center text-5xl relative overflow-hidden h-24`}
-                  whileHover={{
-                    height: "6rem", // Slightly expand on hover
+                  className="absolute inset-0 bg-gray-800/30 backdrop-blur-md rounded-2xl border border-gray-700/50 overflow-hidden shadow-lg z-10"
+                  whileHover={{ 
+                    scale: 1.02,
+                    transition: { 
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 15 
+                    }
+                  }}
+                  style={{
+                    boxShadow: `0 0 20px 0 ${item.bgColor}`,
                   }}
                 >
-                  {/* Animated background effect */}
-                  <motion.div 
-                    className="absolute inset-0 opacity-30"
-                    animate={{
-                      backgroundPosition: ["0% 0%", "100% 100%"],
-                    }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                    }}
-                    style={{
-                      backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"100\" height=\"100\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\" fill=\"%23ffffff\" fill-opacity=\"0.1\" fill-rule=\"evenodd\"/%3E%3C/svg%3E')",
-                      backgroundSize: "cover",
-                    }}
-                  />
+                  {/* Animated light effects */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <motion.div 
+                      className="w-full h-full absolute opacity-20"
+                      style={{
+                        background: `conic-gradient(from ${item.hue}deg at 50% 50%, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.8) 60deg, rgba(255,255,255,0) 120deg)`,
+                      }}
+                      animate={{
+                        transform: ["rotate(0deg)", "rotate(360deg)"]
+                      }}
+                      transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                    />
+                  </div>
                   
-                  {/* Icon with animation */}
-                  <motion.span
-                    initial={{ scale: 1 }}
-                    whileHover={{ 
-                      scale: 1.2,
-                      rotate: [0, 5, -5, 0],
-                      transition: { duration: 0.5 }
-                    }}
-                  >
-                    {item.icon}
-                  </motion.span>
-                </motion.div>
+                  {/* Header with icon */}
+                  <div className="pt-6 px-6 flex items-center">
+                    <motion.div
+                      className={`w-14 h-14 flex items-center justify-center rounded-full text-white text-2xl bg-gradient-to-br ${item.color}`}
+                      whileHover={{ 
+                        scale: 1.1,
+                        rotate: 5,
+                        boxShadow: `0 0 15px 0 ${item.bgColor.replace('0.05', '0.3')}`
+                      }}
+                    >
+                      {item.icon}
+                    </motion.div>
+                    <div className="ml-4">
+                      <h3 className="text-2xl font-bold text-white permanent-visible mb-1">
+                        {item.platform}
+                      </h3>
+                      <div className="flex items-center">
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                          ))}
+                        </div>
+                        <span className="text-gray-400 text-sm ml-2">(120+ users)</span>
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="p-6">
-                  <motion.h3 
-                    className="text-xl font-bold text-white mb-3"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.1 * index }}
-                  >
-                    {item.platform}
-                  </motion.h3>
-                  <div className="flex justify-between items-center">
-                    <motion.span 
-                      className="text-indigo-600 font-semibold"
-                      whileHover={{ 
-                        scale: 1.05,
-                        textShadow: "0px 0px 8px rgba(79, 70, 229, 0.3)" 
-                      }}
-                    >
-                      {item.discount}
-                    </motion.span>
+                  {/* Content */}
+                  <div className="p-6 mt-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="text-gray-400 text-sm">Price</span>
+                        <div className="flex items-baseline">
+                          <span className="text-3xl font-bold text-white mr-2">
+                            {item.discount}
+                          </span>
+                          <span className="text-gray-400 line-through text-sm">Regular</span>
+                        </div>
+                      </div>
+                      <motion.div 
+                        className={`px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.color} text-white`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Most Popular
+                      </motion.div>
+                    </div>
+                    
+                    <div className="mt-6 space-y-4">
+                      <div className="flex items-center text-gray-300">
+                        <svg className="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Premium access included</span>
+                      </div>
+                      <div className="flex items-center text-gray-300">
+                        <svg className="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>No expiration date</span>
+                      </div>
+                    </div>
+                    
                     <motion.button 
-                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm relative overflow-hidden group"
+                      className={`mt-8 w-full py-3 rounded-xl text-white font-medium bg-gradient-to-r ${item.color} relative overflow-hidden`}
                       whileHover={{ 
-                        scale: 1.05,
-                        transition: { type: "spring", stiffness: 400, damping: 10 }
+                        scale: 1.03,
+                        boxShadow: `0 0 20px 0 ${item.bgColor.replace('0.05', '0.2')}`
                       }}
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.97 }}
                     >
-                      {/* Button hover effect */}
                       <motion.span 
                         className="absolute inset-0 w-0 bg-white opacity-20"
                         initial={{ width: "0%" }}
@@ -844,18 +955,41 @@ const Home = () => {
                           transition: { duration: 0.3 }
                         }}
                       />
-                      <span className="relative z-10 flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      <span className="relative flex items-center justify-center">
+                        View Token Details
+                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
-                        View Tokens
                       </span>
                     </motion.button>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             ))}
+          </div>
+          
+          {/* View more button */}
+          <div className="flex justify-center mt-12">
+            <motion.button
+              className="group relative px-6 py-3 text-white font-medium overflow-hidden rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.span 
+                className="absolute inset-0 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-50"
+                initial={{ width: "0%" }}
+                whileHover={{ 
+                  width: "100%",
+                  transition: { duration: 0.3 }
+                }}
+              />
+              <span className="relative flex items-center justify-center">
+                View All Tokens
+                <svg className="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </span>
+            </motion.button>
           </div>
         </div>
       </motion.section>
