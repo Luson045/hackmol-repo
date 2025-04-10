@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Check, ArrowRight, Loader2, CreditCard } from 'lucide-react';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 export default function PaymentGateway() {
   const [paymentStep, setPaymentStep] = useState('select'); // select, upi, processing, success
   const [countdown, setCountdown] = useState(3);
   const [hoverOption, setHoverOption] = useState(null); // Track which option is being hovered
   const [upiId, setUpiId] = useState('');
+  const [amnt, setAmnt] = useState(0);
+  const { user } = useContext(AuthContext);
 
   // Simulate payment process when UPI payment is submitted
   const handleUpiPayment = (e) => {
@@ -18,6 +22,20 @@ export default function PaymentGateway() {
         setPaymentStep('success');
       }, 2000);
     }
+  };
+
+  const handleNoMoneyPayment = async (e) => {
+    e.preventDefault();
+    const res = await axios.post('/api/users/payment', {
+      userId: user?._id,
+      amount: amnt
+    })  
+    .then(
+      setPaymentStep('processing')
+    ).then(
+    setTimeout(() => {
+      setPaymentStep('success');
+    }, 2000))
   };
 
   // Countdown for redirect after successful payment
@@ -81,6 +99,37 @@ export default function PaymentGateway() {
               }`} size={20} />
             </button>
           </div>
+              <br/>
+          <div>
+            <button 
+              className={`w-full transition-all duration-500 flex items-center justify-between p-4 rounded-xl ${
+                hoverOption === 'no_money' 
+                  ? 'bg-gradient-to-r from-emerald-900/50 to-emerald-700/30 shadow-lg shadow-emerald-500/20 border border-emerald-500/30' 
+                  : 'bg-slate-700 hover:bg-slate-600 border border-transparent'
+              }`}
+              onClick={() => setPaymentStep('no_money')}
+              onMouseEnter={() => setHoverOption('no_money')}
+              onMouseLeave={() => setHoverOption(null)}
+            >
+              <div className="flex items-center">
+                <div className={`p-2 rounded-lg mr-3 transition-all duration-500 ${
+                  hoverOption === 'upi' 
+                    ? 'bg-emerald-500/40 scale-110' 
+                    : 'bg-emerald-500/20'
+                }`}>
+                  <CreditCard className={`transition-colors duration-500 ${
+                    hoverOption === 'upi' ? 'text-emerald-300' : 'text-emerald-400'
+                  }`} size={24} />
+                </div>
+                <span>Pay with no money</span>
+              </div>
+              <ArrowRight className={`transition-all transform ${
+                hoverOption === 'upi' 
+                  ? 'text-white translate-x-1' 
+                  : 'text-slate-400'
+              }`} size={20} />
+            </button>
+          </div>
           
           <div className="mt-6 pt-6 border-t border-slate-700 text-sm text-slate-400 flex items-center">
             <div className="bg-emerald-500/20 p-1 rounded-full mr-2">
@@ -91,6 +140,54 @@ export default function PaymentGateway() {
         </div>
       )}
       
+
+      {
+        paymentStep==='no_money'&& (
+          <div className="bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl border border-slate-700 w-full max-w-md shadow-xl animate-fadeIn">
+          <h2 className="text-xl font-semibold mb-6">Enter Amount</h2>
+          
+          <form onSubmit={handleNoMoneyPayment}>
+            <div className="mb-6">
+              <label htmlFor="amnt" className="block text-slate-300 mb-2 text-sm">
+                Amount
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  id="amnt"
+                  value={amnt}
+                  onChange={(e) => setAmnt(e.target.value)}
+                  placeholder="example@upi"
+                  className="w-full bg-slate-700/50 border border-slate-600 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 rounded-lg p-3 text-white outline-none transition-all duration-300"
+                  required
+                />
+                <div className="absolute inset-0 rounded-lg pointer-events-none shadow-glow opacity-0 transition-opacity duration-300"></div>
+              </div>
+              <p className="mt-2 text-xs text-slate-400">
+                Enter your UPI ID to complete the payment of <span className="text-emerald-400 font-semibold">$99.99</span>
+              </p>
+            </div>
+
+            <div className="flex justify-between items-center space-x-4">
+              <button 
+                type="button"
+                className="px-4 py-3 bg-slate-700 hover:bg-slate-600 transition-all duration-300 rounded-xl text-sm flex-1"
+                onClick={() => setPaymentStep('select')}
+              >
+                Back
+              </button>
+              
+              <button 
+                type="submit"
+                className="px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 transition-all duration-300 rounded-xl text-sm font-medium flex-1 shadow-lg shadow-emerald-600/20"
+              >
+                Pay Now
+              </button>
+            </div>
+          </form>
+        </div>
+        )
+      }
       {/* UPI ID Screen */}
       {paymentStep === 'upi' && (
         <div className="bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl border border-slate-700 w-full max-w-md shadow-xl animate-fadeIn">

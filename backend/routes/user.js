@@ -31,10 +31,15 @@ router.get('/api-keys', auth, async (req, res) => {
 
 router.post('/payment', auth, async(req,res)=>{
   try{
-    const user = await User.findById(req.user_.id);
-    user.amount+=req.paid;
+    const {userId, amount} = req.body;
+    const user = await User.findById(userId);
+    user.amount= parseInt(user.amount)+parseInt(amount);
+    user.save();
+    console.log(`${amount } added`);
+    return res.status(200).json({ message: 'Success' });
   }catch(err){
-    //
+    console.log(err);
+    return res.status(500).json({ message: 'Server error' });
   }
 })
 
