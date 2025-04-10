@@ -5,6 +5,50 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const ITEMS_PER_PAGE = 6;
 
+// Fixed price mapping for different models
+const MODEL_PRICES = {
+  // OpenAI models
+  'gpt-4': 0.08,
+  'gpt-3.5-turbo': 0.02,
+  // Anthropic models
+  'claude-3-opus-20240229': 0.15,
+  'claude-3-sonnet-20240229': 0.10,
+  'claude-3-haiku-20240307': 0.05,
+  // Gemini models
+  'gemini-1.5-pro': 0.07,
+  'gemini-2.0-flash': 0.03,
+  'gemini-2.0':0.1,
+  'gemini':0.2,
+  'gpt':0.04,
+  'claude':3,
+  'da-vinci':0.01,
+  'mistral':0.2,
+
+
+  // Default price if model not found
+  'default': 0.05
+};
+
+// Helper function to get price based on model name
+const getPriceForModel = (modelName) => {
+  const lowerCaseName = modelName.toLowerCase();
+  
+  // Check for exact matches
+  if (MODEL_PRICES[lowerCaseName]) {
+    return MODEL_PRICES[lowerCaseName];
+  }
+  
+  // Check for partial matches
+  for (const model in MODEL_PRICES) {
+    if (lowerCaseName.includes(model.toLowerCase())) {
+      return MODEL_PRICES[model];
+    }
+  }
+  
+  // Return default price if no match found
+  return MODEL_PRICES.default;
+};
+
 const Market = () => {
   const { user } = useContext(AuthContext);
   const [listings, setListings] = useState([]);
@@ -16,7 +60,13 @@ const Market = () => {
   const [purchaseDetails, setPurchaseDetails] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [formData, setFormData] = useState({ apiKeyId: '', tokensForSale: '', pricePerToken: '', description: '' });
+  const [formData, setFormData] = useState({ 
+    apiKeyId: '', 
+    tokensForSale: '', 
+    pricePerToken: '',  // This will be auto-calculated based on the model
+    description: '' 
+  });
+  const [selectedApiKey, setSelectedApiKey] = useState(null);
   const [userBalance, setUserBalance] = useState(0);
   const [processingPurchase, setProcessingPurchase] = useState(false);
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
@@ -42,6 +92,29 @@ const Market = () => {
 
     fetchData();
   }, []);
+
+  // Update form data when API key selection changes
+  const handleApiKeySelect = (e) => {
+    const keyId = e.target.value;
+    setFormData({ ...formData, apiKeyId: keyId });
+    
+    if (keyId) {
+      const selected = apiKeys.find(key => key._id === keyId);
+      if (selected) {
+        setSelectedApiKey(selected);
+        // Set the price per token based on the model name
+        const fixedPrice = getPriceForModel(selected.name);
+        setFormData(prev => ({ 
+          ...prev, 
+          apiKeyId: keyId,
+          pricePerToken: fixedPrice
+        }));
+      }
+    } else {
+      setSelectedApiKey(null);
+      setFormData(prev => ({ ...prev, pricePerToken: '' }));
+    }
+  };
 
   const handleConfirmPurchase = (listing, amount) => {
     // Calculate total cost and validate
@@ -94,7 +167,7 @@ const Market = () => {
       setShowConfirmModal(false);
       
       // Call the onPurchaseComplete callback if provided
-      if (props.onPurchaseComplete && typeof props.onPurchaseComplete === 'function') {
+      if (props && props.onPurchaseComplete && typeof props.onPurchaseComplete === 'function') {
         props.onPurchaseComplete();
       }
     } catch (err) {
@@ -103,6 +176,7 @@ const Market = () => {
       setProcessingPurchase(false);
     }
   };
+  
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
@@ -123,6 +197,7 @@ const Market = () => {
 
   const handleCreateListing = async () => {
     try {
+      // Use the formData with the fixed price
       const res = await axios.post('/api/marketplace/listings', formData);
       setListings([res.data, ...listings]);
       setFiltered([res.data, ...filtered]);
@@ -378,7 +453,7 @@ const Market = () => {
                       <label className="block text-sm font-medium text-gray-400 mb-1">Select API Key</label>
                       <select
                         value={formData.apiKeyId}
-                        onChange={(e) => setFormData({ ...formData, apiKeyId: e.target.value })}
+                        onChange={handleApiKeySelect}
                         className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="">Select API Key</option>
@@ -403,14 +478,21 @@ const Market = () => {
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-400 mb-1">Price per Token ($)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        placeholder="Set your price"
-                        value={formData.pricePerToken}
-                        onChange={(e) => setFormData({ ...formData, pricePerToken: e.target.value })}
-                        className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
+                      <div className="flex items-center">
+                        <input
+                          type="number"
+                          step="0.01"
+                          placeholder="Automatically set based on model"
+                          value={formData.pricePerToken}
+                          disabled
+                          className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed opacity-70"
+                        />
+                        {selectedApiKey && (
+                          <div className="ml-2 text-sm text-blue-400">
+                            <span className="p-1 bg-gray-700 rounded">Fixed price for {selectedApiKey.name}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     
                     <div>
