@@ -12,10 +12,10 @@ const phrases = [
 ];
 
 const animals = [
-  { name: "Fox", trait: "Clever trading strategies" },
-  { name: "Owl", trait: "Wise token investments" },
-  { name: "Bear", trait: "Strong market presence" },
-  { name: "Bull", trait: "Growing token value" }
+  { name: "", trait: "" },
+  { name: "", trait: "" },
+  { name: "", trait: "" },
+  { name: "", trait: "" }
 ];
 
 const Home = () => {
@@ -214,12 +214,35 @@ const Home = () => {
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.7, ease: "easeOut" }}
   >
-    <motion.div
-      className="mb-8"
-      initial="initial"
-      animate="animate"
-      variants={floatAnimation}
-    >
+   <motion.div
+  className="mb-8"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.25, 0.1, 0.25, 1.0] // Custom cubic bezier for a professional easing
+    }
+  }}
+  whileHover={{ 
+    scale: 1.02,
+    transition: { duration: 0.3 }
+  }}
+  whileInView={{
+    opacity: [0.9, 1],
+    boxShadow: [
+      "0px 0px 0px rgba(0,0,0,0.1)",
+      "0px 4px 12px rgba(0,0,0,0.1)"
+    ],
+    transition: {
+      duration: 1.2,
+      ease: "easeOut"
+    }
+  }}
+>
+  {/* Your content here */}
+
       <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 relative">
         {/* Subtle glow effect */}
         <motion.div 
@@ -235,53 +258,46 @@ const Home = () => {
             ease: "easeInOut"
           }}
         />
-        <svg viewBox="0 0 100 100" className="w-full h-full text-indigo-500 dark:text-indigo-300 relative z-10">
-          <motion.path
-            d="M50,15 C30,15 15,30 15,50 C15,70 30,85 50,85 C70,85 85,70 85,50 C85,30 70,15 50,15 Z"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ 
-              duration: 2,
-              ease: "easeOut",
-              delay: 0.2
-            }}
-          />
-          <motion.path
-            d={animals[currentAnimalIndex].name === "Fox" ? 
-              "M35,40 L30,30 L40,35 M65,40 L70,30 L60,35 M40,55 C45,65 55,65 60,55 M40,75 L60,75 L50,85 Z" :
-              animals[currentAnimalIndex].name === "Owl" ? 
-              "M35,35 C25,25 25,45 35,40 M65,35 C75,25 75,45 65,40 M45,55 L55,55 M35,65 C40,75 60,75 65,65 Z" :
-              animals[currentAnimalIndex].name === "Bear" ? 
-              "M30,35 C25,30 25,40 30,40 M70,35 C75,30 75,40 70,40 M45,60 L55,60 M40,70 C45,80 55,80 60,70 Z" :
-              "M30,40 C25,30 25,45 30,40 M70,40 C75,30 75,45 70,40 M35,60 L65,60 M40,70 C50,80 60,70 50,60 Z"}
-            stroke="currentColor"
-            strokeWidth="1.5"
-            fill="none"
-            strokeLinecap="round"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            key={animals[currentAnimalIndex].name}
-            transition={{ duration: 0.4, delay: 0.5 }}
-          />
-        </svg>
+      <svg viewBox="0 0 200 200">
+  {/* <!-- Outer circle - clean professional look --> */}
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#3B82F6" stroke-width="4" />
+  
+  {/* <!-- Brain/connection nodes representing AI --> */}
+  <g stroke="#3B82F6" stroke-width="3" fill="none">
+    {/* <!-- Central node --> */}
+    <circle cx="100" cy="100" r="15" />
+    
+    {/* <!-- Surrounding nodes --> */}
+    <circle cx="65" cy="75" r="8" />
+    <circle cx="135" cy="75" r="8" />
+    <circle cx="65" cy="125" r="8" />
+    <circle cx="135" cy="125" r="8" />
+    <circle cx="100" cy="50" r="8" />
+    <circle cx="100" cy="150" r="8" />
+    
+    {/* <!-- Connection lines --> */}
+    <line x1="100" y1="85" x2="100" y2="50" />
+    <line x1="100" y1="115" x2="100" y2="150" />
+    <line x1="85" y1="100" x2="65" y2="75" />
+    <line x1="115" y1="100" x2="135" y2="75" />
+    <line x1="85" y1="100" x2="65" y2="125" />
+    <line x1="115" y1="100" x2="135" y2="125" />
+    
+    {/* <!-- Additional connections --> */}
+    <line x1="65" y1="75" x2="100" y2="50" />
+    <line x1="135" y1="75" x2="100" y2="50" />
+    <line x1="65" y1="125" x2="100" y2="150" />
+    <line x1="135" y1="125" x2="100" y2="150" />
+    
+    {/* <!-- Pulse animation circle --> */}
+    <circle cx="100" cy="100" r="30" opacity="0.3">
+      <animate attributeName="r" values="30;50;30" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
+    </circle>
+  </g>
+</svg>
       </div>
-      <motion.p 
-        className="text-indigo-500 dark:text-indigo-300 font-medium tracking-wide text-sm uppercase"
-        animate={{ 
-          opacity: [0.8, 1, 0.8],
-        }}
-        transition={{ 
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
-        {animals[currentAnimalIndex].name} • {animals[currentAnimalIndex].trait}
-      </motion.p>
+     
     </motion.div>
 
     {/* Text transition effects */}
