@@ -1236,7 +1236,19 @@
   
   /* Make sure the main content doesn't overflow */
   html, body {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) var(--bg-secondary);
+    
+    /* Hide duplicate scrollbars */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
     overflow-x: hidden;
+    
     width: 100%;
     margin: 0;
     padding: 0;
