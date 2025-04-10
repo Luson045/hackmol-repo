@@ -19,7 +19,7 @@ const animals = [
 ];
 
 const Home = () => {
-  const { backendUrl } = useContext(AuthContext);
+  const {user, isAuthenticated } = useContext(AuthContext);
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -31,7 +31,19 @@ const Home = () => {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.2]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
-
+  if (isAuthenticated) {
+    const user_role=user.role;
+    switch (user_role) {
+      case "user":
+        return navigate("dashboard");
+        break;
+      case "admin":
+        return navigate("admin");
+        break;
+      default:
+        break;
+    }
+  }
   // Initialize animation state
   useEffect(() => {
     setTimeout(() => setIsLoaded(true), 300);
