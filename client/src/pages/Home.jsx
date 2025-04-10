@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import SuccessStories from '../components/Success';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-
+import { FaRobot, FaSmile, FaStar, FaBrain, FaPen, FaMagic } from 'react-icons/fa';
 const phrases = [
   "Trade Unused Tokens Seamlessly",
   "Access Premium Content for Less",
@@ -11,17 +11,11 @@ const phrases = [
   "Smart Trading, Better Savings"
 ];
 
-const animals = [
-  { name: "", trait: "" },
-  { name: "", trait: "" },
-  { name: "", trait: "" },
-  { name: "", trait: "" }
-];
 
 const Home = () => {
   const {user, isAuthenticated } = useContext(AuthContext);
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
+  // const [currentAnimalIndex, setCurrentAnimalIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
   const featuresRef = useRef(null);
@@ -54,13 +48,13 @@ const Home = () => {
       setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
     }, 4000);
     
-    const animalInterval = setInterval(() => {
-      setCurrentAnimalIndex((prevIndex) => (prevIndex + 1) % animals.length);
-    }, 6000);
+    // const animalInterval = setInterval(() => {
+      // setCurrentAnimalIndex((prevIndex) => (prevIndex + 1) % animals.length);
+    // }, 6000);
     
     return () => {
       clearInterval(phraseInterval);
-      clearInterval(animalInterval);
+      // clearInterval(animalInterval);
     };
   }, []);
 
@@ -483,91 +477,204 @@ const Home = () => {
       </motion.section>
 
       {/* Stats Section with Counter Animation */}
-      <motion.section 
-        className="py-16 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 px-4"
-        ref={statsRef}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.7 }}
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                value: "50K+",
-                label: "Active Users Trading Tokens",
-                color: "from-blue-400 to-indigo-600"
-              },
-              {
-                value: "100+",
-                label: "Supported Content Platforms",
-                color: "from-indigo-400 to-purple-600"
-              },
-              {
-                value: "30%",
-                label: "Average Savings for Buyers",
-                color: "from-purple-400 to-pink-600"
-              },
-              {
-                value: "$2M+",
-                label: "Monthly Token Value Traded",
-                color: "from-pink-400 to-red-600"
+      <motion.section
+  className="py-20 bg-gradient-to-b from-slate-50 to-white dark:from-gray-900 dark:to-gray-800 px-6"
+  ref={statsRef}
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.8 }}
+>
+  <div className="max-w-6xl mx-auto">
+    {/* Section Header */}
+    <motion.div 
+      className="text-center mb-16"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
+      <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+        Measurable Business Outcomes
+      </h2>
+      <div className="w-20 h-px bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mb-6"></div>
+      <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">
+        Our enterprise AI platform delivers quantifiable performance improvements
+      </p>
+    </motion.div>
+
+    {/* Stats Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {[
+        {
+          value: "50K+",
+          label: "Active Users",
+          description: "Enterprise professionals utilizing our platform",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          )
+        },
+        {
+          value: "100+",
+          label: "Integrations",
+          description: "Enterprise software compatibility",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          )
+        },
+        {
+          value: "30%",
+          label: "Efficiency Gain",
+          description: "Measured productivity improvement",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <line x1="12" y1="20" x2="12" y2="10"></line>
+              <line x1="18" y1="20" x2="18" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="16"></line>
+            </svg>
+          )
+        },
+        {
+          value: "$2M+",
+          label: "Client Savings",
+          description: "Monthly operational cost reduction",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+              <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          )
+        }
+      ].map((stat, index) => (
+        <motion.div
+          key={index}
+          className="relative h-full"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ 
+            delay: index * 0.1, 
+            duration: 0.7, 
+            ease: [0.25, 0.1, 0.25, 1]
+          }}
+        >
+          <motion.div
+            className="relative bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 h-full overflow-hidden"
+            whileHover={{ 
+              y: -8,
+              boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05)",
+              transition: { 
+                type: "spring", 
+                stiffness: 300, 
+                damping: 20 
               }
-            ].map((stat, index) => (
-              <motion.div 
-                key={index}
-                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md text-center overflow-hidden relative"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                whileHover={{ 
-                  scale: 1.05,
-                  transition: { type: "spring", stiffness: 400, damping: 10 }
-                }}
+            }}
+          >
+            <div className="p-6">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center p-2.5 text-blue-600 dark:text-blue-400 transition-all duration-300 group-hover:bg-blue-500 group-hover:text-white">
+                  {stat.icon}
+                </div>
+                <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">{stat.label}</h3>
+              </div>
+              
+              <motion.div
+                className="space-y-2"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
               >
-                {/* Background gradient animation */}
-                <motion.div 
-                  className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${stat.color}`}
-                  initial={{ width: 0 }}
-                  whileInView={{ width: "100%" }}
+                <motion.span 
+                  className="block text-4xl font-bold text-gray-900 dark:text-white"
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.2 + index * 0.1, duration: 0.8 }}
-                />
-                
-                {/* Counter animation */}
-                <motion.h2 
-                  className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400 mb-2 relative"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                  transition={{ 
+                    delay: 0.3 + index * 0.1, 
+                    duration: 0.5,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    color: "#3b82f6", // blue-500
+                    transition: { duration: 0.2 }
+                  }}
                 >
                   {stat.value}
-                  <motion.span
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-black-600 to-red-600 dark:from-indigo-400 dark:to-blue-400"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-                  />
-                </motion.h2>
-                <motion.p 
-                  className="text-gray-600 dark:text-gray-300"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 + index * 0.1, duration: 0.5 }}
-                >
-                  {stat.label}
-                </motion.p>
+                </motion.span>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {stat.description}
+                </p>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
+            </div>
+            
+            {/* Progress bar that animates on hover */}
+            <div className="h-1 w-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-blue-400 to-blue-600 w-0"
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.4 }}
+              />
+            </div>
+            
+            {/* Decorative accent */}
+            <motion.div 
+              className="absolute top-0 right-0 w-16 h-16"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 + index * 0.1, duration: 0.6 }}
+            >
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500/10 dark:text-blue-400/10">
+                <path d="M0 0L64 64V0H0Z" fill="currentColor"/>
+              </svg>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      ))}
+    </div>
+    
+    {/* Subtle background accents */}
+    <div className="relative w-full h-16 mt-12">
+      <motion.div 
+        className="absolute hidden lg:block -left-12 -top-32 w-64 h-64 rounded-full bg-blue-400/5 dark:bg-blue-500/5"
+        animate={{ 
+          y: [0, -20, 0],
+          scale: [1, 1.05, 1]
+        }}
+        transition={{ 
+          repeat: Infinity,
+          duration: 15,
+          ease: "easeInOut" 
+        }}
+      />
+      <motion.div 
+        className="absolute hidden lg:block right-0 top-0 w-32 h-32 rounded-full bg-blue-400/5 dark:bg-blue-500/5"
+        animate={{ 
+          y: [0, 15, 0],
+          x: [0, 10, 0],
+          scale: [1, 1.03, 1]
+        }}
+        transition={{ 
+          repeat: Infinity,
+          duration: 20,
+          ease: "easeInOut" 
+        }}
+      />
+    </div>
+  </div>
+</motion.section>
       {/* Featured Tokens with Staggered Animation */}
       <motion.section 
         className="py-16 px-4"
@@ -589,13 +696,43 @@ const Home = () => {
           </motion.h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { platform: "StreamFlix", discount: "25% off", icon: "🦊", color: "from-red-400 to-red-600" },
-              { platform: "MusicOwl", discount: "30% off", icon: "🦉", color: "from-green-400 to-green-600" },
-              { platform: "LearnBear", discount: "40% off", icon: "🐻", color: "from-blue-400 to-blue-600" },
-              { platform: "GamingBull", discount: "20% off", icon: "🐂", color: "from-yellow-400 to-yellow-600" },
-              { platform: "FitFox", discount: "35% off", icon: "🦊", color: "from-purple-400 to-purple-600" },
-              { platform: "NewsOwl", discount: "15% off", icon: "🦉", color: "from-indigo-400 to-indigo-600" }
-            ].map((item, index) => (
+  { 
+    platform: "ChatGPT", 
+    discount: "25% off", 
+    icon: <FaRobot />, 
+    color: "from-green-400 to-green-600" 
+  },
+  { 
+    platform: "Claude", 
+    discount: "30% off", 
+    icon: <FaSmile />, 
+    color: "from-purple-400 to-purple-600" 
+  },
+  { 
+    platform: "Gemini", 
+    discount: "40% off", 
+    icon: <FaStar />, 
+    color: "from-blue-400 to-blue-600" 
+  },
+  { 
+    platform: "Anthropic", 
+    discount: "20% off", 
+    icon: <FaBrain />, 
+    color: "from-red-400 to-red-600" 
+  },
+  { 
+    platform: "Bard", 
+    discount: "35% off", 
+    icon: <FaPen />, 
+    color: "from-yellow-400 to-yellow-600" 
+  },
+  { 
+    platform: "Llama", 
+    discount: "15% off", 
+    icon: <FaMagic />, 
+    color: "from-indigo-400 to-indigo-600" 
+  }
+].map((item, index) => (
               <motion.div 
                 key={index}
                 className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md group cursor-pointer"
