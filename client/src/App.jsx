@@ -5,14 +5,14 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
-// import Dashboard from './user_dashboard/Dashboard';
+import Dashboard from './user_dashboard/Dashboard';
 import Market from './pages/Market';
 // import AdminDashboard from './admin_dashboard/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import Footer from './components/Footer';
-// import ChatInterface from './chat/ChatInterface';
-// import './css/ChatInterface.css';
+import ChatInterface from './chat/ChatInterface';
+import './css/ChatInterface.css';
 
 function App() {
   return (
@@ -24,14 +24,14 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              {/* <Route 
+              <Route 
                 path="/dashboard" 
                 element={
                   <PrivateRoute>
                     <Dashboard />
                   </PrivateRoute>
                 } 
-              /> */}
+              />
               <Route 
                 path="/marketplace" 
                 element={
@@ -49,9 +49,9 @@ function App() {
                 } 
               /> */}
               
-            {/* <Route 
+            <Route 
               path="/chat" 
-              element={<PrivateRoute><ChatInterface/></PrivateRoute>} /> */}
+              element={<PrivateRoute><ChatInterface/></PrivateRoute>} />
             </Routes>
             <Footer/>
           </div>

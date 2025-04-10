@@ -21,7 +21,7 @@ import { Doughnut, Line, Bar } from 'react-chartjs-2';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-circular-progressbar/dist/styles.css';
 import ApiKeyList from './ApiKeyList';
-import AddApiKeyModal from './AddApiKeyModal';
+import AddApiKeyModal from './AddApiKey';
 import PurchaseHistory from './PurchaseHistory';
 import SalesHistory from './SalesHistory';
 import Market from '../pages/Market';
