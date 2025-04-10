@@ -6,7 +6,8 @@ import {
   FiKey, FiShoppingCart, FiTrendingUp, FiMenu, FiX, 
   FiUser, FiSettings, FiLogOut, FiPieChart, FiDollarSign,
   FiCreditCard, FiShield, FiMessageCircle, FiCalendar, FiDownload,
-  FiHome, FiMessageSquare, FiShoppingBag, FiBarChart2
+  FiHome, FiMessageSquare, FiShoppingBag, FiBarChart2, FiHelpCircle, 
+  FiArrowRight, FiArrowLeft, FiCheckCircle, FiMoreHorizontal 
 } from 'react-icons/fi';
 import { 
   BsGraphUp, BsWallet2, BsLightningCharge, BsArrowUpRight,
@@ -89,9 +90,239 @@ const Dashboard = () => {
   // Create a ref for the update interval
   const tokenStatsIntervalRef = useRef(null);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  // Tour guide state
+  const [showTour, setShowTour] = useState(false);
+  const [tourStep, setTourStep] = useState(1);
+  const [tourCompleted, setTourCompleted] = useState(false);
+  const [tourPosition, setTourPosition] = useState({ left: '50%', top: '50%' });
+  const [highlightedElement, setHighlightedElement] = useState(null);
+  const tourModalRef = useRef(null);
+  
+  // Tour steps
+  const tourSteps = [
+    {
+      title: "Welcome to TokenFlow Dashboard",
+      description: "Let's take a quick tour to help you get started with the platform.",
+      target: ".dashboard-header"
+    },
+    {
+      title: "Navigation Sidebar",
+      description: "Use this sidebar to navigate between different sections of the dashboard.",
+      target: ".sidebar-menu"
+    },
+    {
+      title: "Dashboard Overview",
+      description: "This section gives you an overview of your API keys and token usage.",
+      target: ".stats-cards-container"
+    },
+    {
+      title: "API Keys Management",
+      description: "View and manage your API keys from this section.",
+      target: ".dashboard-card"
+    },
+    {
+      title: "User Profile",
+      description: "View your profile and logout from here.",
+      target: ".sidebar-user"
+    }
+  ];
+
+  // Add an element highlight effect
+  const addHighlight = (element) => {
+    if (element) {
+      // Remove highlight from previous element if exists
+      if (highlightedElement) {
+        highlightedElement.classList.remove('tour-highlight');
+      }
+      
+      // Add highlight to current element
+      element.classList.add('tour-highlight');
+      setHighlightedElement(element);
+    }
   };
+  
+  // Remove highlight effect
+  const removeHighlight = () => {
+    if (highlightedElement) {
+      highlightedElement.classList.remove('tour-highlight');
+      setHighlightedElement(null);
+    }
+  };
+
+  // Position tour guide close to element
+  const positionTourGuide = (element) => {
+    if (!element || !tourModalRef.current) return;
+    
+    const elementRect = element.getBoundingClientRect();
+    const modalRect = tourModalRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Calculate optimal position
+    let left, top;
+    
+    // Try to position to the right of the element
+    if (elementRect.right + modalRect.width + 20 < viewportWidth) {
+      left = `${elementRect.right + 20}px`;
+      top = `${elementRect.top + (elementRect.height / 2) - (modalRect.height / 2)}px`;
+    } 
+    // Try to position to the left of the element
+    else if (elementRect.left - modalRect.width - 20 > 0) {
+      left = `${elementRect.left - modalRect.width - 20}px`;
+      top = `${elementRect.top + (elementRect.height / 2) - (modalRect.height / 2)}px`;
+    }
+    // Try to position below the element
+    else if (elementRect.bottom + modalRect.height + 20 < viewportHeight) {
+      left = `${elementRect.left + (elementRect.width / 2) - (modalRect.width / 2)}px`;
+      top = `${elementRect.bottom + 20}px`;
+    }
+    // Try to position above the element
+    else if (elementRect.top - modalRect.height - 20 > 0) {
+      left = `${elementRect.left + (elementRect.width / 2) - (modalRect.width / 2)}px`;
+      top = `${elementRect.top - modalRect.height - 20}px`;
+    }
+    // Last resort: center on screen
+    else {
+      left = `${(viewportWidth - modalRect.width) / 2}px`;
+      top = `${(viewportHeight - modalRect.height) / 2}px`;
+    }
+    
+    // Ensure our modal doesn't go off-screen
+    const numLeft = parseFloat(left);
+    const numTop = parseFloat(top);
+    
+    if (numLeft < 20) left = '20px';
+    if (numTop < 20) top = '20px';
+    if (numLeft + modalRect.width > viewportWidth - 20) left = `${viewportWidth - modalRect.width - 20}px`;
+    if (numTop + modalRect.height > viewportHeight - 20) top = `${viewportHeight - modalRect.height - 20}px`;
+    
+    // Update position with animation
+    setTourPosition({ left, top });
+  };
+
+  // Update for current tour step
+  const updateForCurrentStep = (step) => {
+    const currentStep = tourSteps[step - 1];
+    if (!currentStep) return;
+    
+    try {
+      const targetElement = document.querySelector(currentStep.target);
+      if (targetElement) {
+        // Scroll to element
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Add highlight effect
+        addHighlight(targetElement);
+        
+        // After scrolling completes, position the tour guide
+        setTimeout(() => {
+          positionTourGuide(targetElement);
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Error updating tour step:', error);
+    }
+  };
+
+  // Start tour
+  const startTour = () => {
+    setTourStep(1);
+    setShowTour(true);
+    
+    // Wait a moment for the tour modal to render before positioning
+    setTimeout(() => {
+      updateForCurrentStep(1);
+    }, 100);
+    
+    // Save to localStorage
+    localStorage.setItem('dashboardTourShown', 'true');
+  };
+
+  // End tour
+  const endTour = () => {
+    setShowTour(false);
+    setTourCompleted(true);
+    removeHighlight();
+    toast.success("Tour completed! You're all set to use TokenFlow.");
+  };
+
+  // Go to next step
+  const nextStep = () => {
+    if (tourStep < tourSteps.length) {
+      const newStep = tourStep + 1;
+      setTourStep(newStep);
+      updateForCurrentStep(newStep);
+    } else {
+      endTour();
+    }
+  };
+
+  // Go to previous step
+  const prevStep = () => {
+    if (tourStep > 1) {
+      const newStep = tourStep - 1;
+      setTourStep(newStep);
+      updateForCurrentStep(newStep);
+    }
+  };
+
+  // Handle dragging the tour guide
+  const handleMouseDown = (e) => {
+    if (!tourModalRef.current) return;
+    
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const boxRect = tourModalRef.current.getBoundingClientRect();
+    const offsetX = startX - boxRect.left;
+    const offsetY = startY - boxRect.top;
+    
+    const handleMouseMove = (e) => {
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+      
+      // Ensure the modal stays within viewport
+      const maxX = window.innerWidth - boxRect.width;
+      const maxY = window.innerHeight - boxRect.height;
+      
+      const boundedX = Math.max(20, Math.min(x, maxX - 20));
+      const boundedY = Math.max(20, Math.min(y, maxY - 20));
+      
+      setTourPosition({
+        left: `${boundedX}px`,
+        top: `${boundedY}px`
+      });
+    };
+    
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    
+    // Prevent text selection during drag
+    e.preventDefault();
+  };
+
+  // Check if user is new and start tour automatically
+  useEffect(() => {
+    if (!loading && user) {
+      const hasSeenTour = localStorage.getItem('dashboardTourShown');
+      if (!hasSeenTour && !tourCompleted) {
+        setTimeout(() => {
+          startTour();
+        }, 1500);
+      }
+    }
+  }, [loading, user]);
+
+  // Clean up highlight on unmount
+  useEffect(() => {
+    return () => {
+      removeHighlight();
+    };
+  }, []);
 
   useEffect(() => {
     // Set up interval for real-time token usage updates
@@ -512,7 +743,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${sidebarOpen ? 'sidebar-open' : ''}`}>
       <SvgDefs />
       <ToastContainer 
         position="top-right" 
@@ -738,18 +969,7 @@ const Dashboard = () => {
               <div className="card-header">
                 <h4>
                   <FiBarChart2 /> Token Usage Analytics
-                  <span className="real-time-indicator">
-                    <span className="real-time-dot"></span> Real-time
-                  </span>
                 </h4>
-                <motion.button 
-                  className="action-btn"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={refreshTransactions}
-                >
-                  <FiDownload /> Refresh
-                </motion.button>
               </div>
               <div className="card-body">
                 <div className="analytics-grid">
@@ -950,14 +1170,6 @@ const Dashboard = () => {
                 >
                   <div className="card-header">
                     <h4><FiShoppingCart /> Purchase History</h4>
-                    <motion.button 
-                      className="action-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleTabChange('purchases')}
-                    >
-                      View All
-                    </motion.button>
                   </div>
                   <div className="card-body">
                     {transactionsLoading ? (
@@ -985,14 +1197,6 @@ const Dashboard = () => {
                 >
                   <div className="card-header">
                     <h4><BsGraphUp /> Sales History</h4>
-                    <motion.button 
-                      className="action-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleTabChange('sales')}
-                    >
-                      View All
-                    </motion.button>
                   </div>
                   <div className="card-body">
                     {transactionsLoading ? (
@@ -1041,14 +1245,6 @@ const Dashboard = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h4><FiShoppingCart /> Purchase History</h4>
-              <motion.button 
-                className="action-btn"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={refreshTransactions}
-              >
-                <FiDownload /> Refresh
-              </motion.button>
             </div>
             <div className="card-body">
               {transactionsLoading ? (
@@ -1071,14 +1267,6 @@ const Dashboard = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h4><BsGraphUp /> Sales History</h4>
-              <motion.button 
-                className="action-btn"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={refreshTransactions}
-              >
-                <FiDownload /> Refresh
-              </motion.button>
             </div>
             <div className="card-body">
               {transactionsLoading ? (
@@ -1139,6 +1327,83 @@ const Dashboard = () => {
             </motion.div>
       )}
         </AnimatePresence>
+
+        {/* Help button */}
+        <button 
+          className="help-button" 
+          onClick={startTour}
+          title="Start Tour"
+        >
+          <FiHelpCircle />
+          <span>Help</span>
+        </button>
+
+        {/* Tour Guide Modal */}
+        {showTour && (
+          <div 
+            className="tour-modal"
+            ref={tourModalRef}
+            style={{
+              position: 'fixed',
+              left: tourPosition.left,
+              top: tourPosition.top,
+              zIndex: 9999,
+              transition: 'left 0.4s ease, top 0.4s ease'
+            }}
+          >
+            <div 
+              className="tour-header"
+              onMouseDown={handleMouseDown}
+              style={{ cursor: 'move' }}
+            >
+              <div className="tour-drag-handle">
+                <FiMoreHorizontal />
+              </div>
+              <h3>{tourSteps[tourStep - 1].title}</h3>
+              <button 
+                className="tour-close-button"
+                onClick={endTour}
+              >
+                <FiX />
+              </button>
+            </div>
+            
+            <div className="tour-body">
+              <p>{tourSteps[tourStep - 1].description}</p>
+            </div>
+            
+            <div className="tour-footer">
+              <div className="tour-progress">
+                Step {tourStep} of {tourSteps.length}
+              </div>
+              <div className="tour-actions">
+                {tourStep > 1 && (
+                  <button 
+                    className="tour-button prev"
+                    onClick={prevStep}
+                  >
+                    <FiArrowLeft /> Previous
+                  </button>
+                )}
+                {tourStep < tourSteps.length ? (
+                  <button 
+                    className="tour-button next"
+                    onClick={nextStep}
+                  >
+                    Next <FiArrowRight />
+                  </button>
+                ) : (
+                  <button 
+                    className="tour-button finish"
+                    onClick={endTour}
+                  >
+                    Finish <FiCheckCircle />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </motion.div>
     </div>
   );

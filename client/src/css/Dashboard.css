@@ -2707,3 +2707,423 @@
     z-index: 5;
   }
   
+  /* Updated User Tour Styles */
+  
+  /* Help button to start the tour */
+  .help-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-size: 1.3rem;
+  }
+  
+  .help-button span {
+    font-size: 0.6rem;
+    margin-top: 0.2rem;
+    font-weight: 600;
+  }
+  
+  .help-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Tour overlay to dim the background */
+  .tour-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1001;
+    pointer-events: none;
+  }
+  
+  /* Spotlight effect for the current tour element */
+  .tour-spotlight {
+    position: fixed;
+    border-radius: 8px;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+    z-index: 1002;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    border: 2px solid var(--primary-color);
+  }
+  
+  /* Tour modal */
+  .tour-modal {
+    position: fixed;
+    width: 400px;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1003;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: default;
+    /* Add a subtle glow effect to make it more visible */
+    box-shadow: 0 0 20px rgba(94, 96, 206, 0.3);
+    /* Don't use transform for positioning as it can break fixed positioning */
+    transform: translate(0, 0) !important;
+  }
+  
+  /* Styles for minimized state */
+  .tour-modal.minimized {
+    width: 300px;
+  }
+  
+  /* Draggable header */
+  .tour-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: move; /* Indicate draggable */
+    background: rgba(94, 96, 206, 0.15);
+    user-select: none; /* Prevent text selection while dragging */
+  }
+  
+  .tour-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+    text-align: center;
+  }
+  
+  .tour-drag-handle {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    color: var(--text-muted);
+  }
+  
+  .drag-icon {
+    font-size: 1.1rem;
+  }
+  
+  .tour-header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .tour-action-button, .tour-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .tour-action-button:hover, .tour-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+  }
+  
+  .tour-body {
+    padding: 1.5rem;
+    overflow: hidden;
+  }
+  
+  .tour-body p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  
+  .tour-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .tour-progress {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  
+  .tour-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .tour-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  .tour-button.prev {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+  }
+  
+  .tour-button.next, .tour-button.finish {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+  }
+  
+  /* Add subtle pulse animation to spotlight */
+  @keyframes spotlight-pulse {
+    0% { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--primary-color); }
+    50% { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 15px 1px var(--primary-color); }
+    100% { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--primary-color); }
+  }
+  
+  .tour-spotlight {
+    animation: spotlight-pulse 2s infinite ease-in-out;
+  }
+  
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .tour-modal {
+      width: 90%;
+      max-width: 350px;
+    }
+    
+    .tour-modal.minimized {
+      width: 80%;
+      max-width: 300px;
+    }
+    
+    .help-button {
+      bottom: 1.5rem;
+      right: 1.5rem;
+    }
+  }
+  
+  /* Add a reset button to the tour header */
+  .reset-position-button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .reset-position-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+  }
+  
+  /* User Guide / Tour styles */
+  .help-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-size: 1.3rem;
+  }
+  
+  .help-button span {
+    font-size: 0.6rem;
+    margin-top: 0.2rem;
+    font-weight: 600;
+  }
+  
+  .help-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .tour-modal {
+    width: 320px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(94, 96, 206, 0.3);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .tour-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background-color: rgba(94, 96, 206, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    user-select: none;
+  }
+  
+  .tour-drag-handle {
+    margin-right: 8px;
+    color: var(--text-muted);
+  }
+  
+  .tour-header h3 {
+    margin: 0;
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .tour-close-button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: color 0.2s ease;
+  }
+  
+  .tour-close-button:hover {
+    color: var(--text-primary);
+  }
+  
+  .tour-body {
+    padding: 16px;
+  }
+  
+  .tour-body p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  
+  .tour-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .tour-progress {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+  
+  .tour-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .tour-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .tour-button.prev {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+  }
+  
+  .tour-button.next,
+  .tour-button.finish {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+  }
+  
+  .tour-button:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Highlight effect for tour targets */
+  .tour-highlight {
+    position: relative;
+    z-index: 1002 !important;
+    box-shadow: 0 0 0 4px var(--primary-color), 0 0 0 6000px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    animation: pulse-highlight 2s infinite ease-in-out;
+  }
+  
+  @keyframes pulse-highlight {
+    0% { box-shadow: 0 0 0 4px var(--primary-color), 0 0 0 6000px rgba(0, 0, 0, 0.5); }
+    50% { box-shadow: 0 0 0 6px var(--primary-color), 0 0 0 6000px rgba(0, 0, 0, 0.5); }
+    100% { box-shadow: 0 0 0 4px var(--primary-color), 0 0 0 6000px rgba(0, 0, 0, 0.5); }
+  }
+  
+  /* Tour connector line */
+  .tour-connector {
+    position: absolute;
+    background-color: var(--primary-color);
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.7;
+    transition: all 0.4s ease;
+  }
+  
+  @media (max-width: 768px) {
+    .tour-modal {
+      width: 90%;
+      max-width: 320px;
+    }
+    
+    .help-button {
+      bottom: 1.5rem;
+      right: 1.5rem;
+    }
+  }
+  
