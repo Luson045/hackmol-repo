@@ -144,190 +144,216 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50 dark:from-gray-900 dark:to-indigo-900 overflow-x-hidden">
       {/* Dynamic Particles Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-gradient-to-r from-blue-300 to-indigo-400 dark:from-blue-600 dark:to-indigo-700 opacity-10"
-            style={{
-              width: `${Math.random() * 300 + 50}px`,
-              height: `${Math.random() * 300 + 50}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              filter: "blur(40px)"
-            }}
-            animate={{
-              x: [0, Math.random() * 200 - 100],
-              y: [0, Math.random() * 200 - 100],
-              scale: [1, Math.random() * 0.4 + 0.8, 1],
-              opacity: [0.1, 0.2, 0.1],
-            }}
-            transition={{
-              duration: Math.random() * 30 + 20,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-          />
-        ))}
-      </div>
+  {[...Array(15)].map((_, i) => (
+    <motion.div
+      key={i}
+      className="absolute rounded-full bg-gradient-to-r from-blue-300 via-indigo-400 to-purple-500 dark:from-blue-600 dark:via-indigo-700 dark:to-purple-800 opacity-10"
+      style={{
+        width: `${Math.random() * 400 + 100}px`,
+        height: `${Math.random() * 400 + 100}px`,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        filter: "blur(50px)",
+        transformOrigin: "center"
+      }}
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{
+        x: [0, Math.random() * 300 - 150],
+        y: [0, Math.random() * 300 - 150],
+        scale: [0.8, Math.random() * 0.5 + 0.8, 0.8],
+        opacity: [0.05, 0.15, 0.05],
+        rotate: [0, Math.random() * 20 - 10]
+      }}
+      transition={{
+        duration: Math.random() * 40 + 30,
+        repeat: Infinity,
+        repeatType: "reverse",
+        ease: "easeInOut",
+        delay: Math.random() * 5
+      }}
+    />
+  ))}
+</div>
 
       {/* Hero Section with Parallax Effect */}
       <motion.section 
-        className="relative pt-20 md:pt-32 pb-16 md:pb-24 px-4 overflow-hidden"
-        style={{ opacity, scale }}
-      >
+  className="relative pt-24 md:pt-40 pb-20 md:pb-32 px-4 overflow-hidden"
+  style={{ opacity, scale }}
+>
+  {/* Subtle background blur effect */}
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {[...Array(5)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute rounded-full bg-gradient-to-r from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-900 opacity-20"
+        style={{
+          width: `${Math.random() * 600 + 200}px`,
+          height: `${Math.random() * 600 + 200}px`,
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          filter: "blur(80px)",
+        }}
+        animate={{
+          x: [0, Math.random() * 100 - 50],
+          y: [0, Math.random() * 100 - 50],
+          scale: [1, Math.random() * 0.2 + 0.9],
+        }}
+        transition={{
+          duration: Math.random() * 20 + 15,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut"
+        }}
+      />
+    ))}
+  </div>
+
+  <motion.div 
+    className="max-w-5xl mx-auto text-center relative z-10"
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7, ease: "easeOut" }}
+  >
+    <motion.div
+      className="mb-8"
+      initial="initial"
+      animate="animate"
+      variants={floatAnimation}
+    >
+      <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 relative">
+        {/* Subtle glow effect */}
         <motion.div 
-          className="max-w-5xl mx-auto text-center relative z-10"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 dark:from-indigo-500 dark:to-purple-600 rounded-full filter blur-xl"
+          animate={{ 
+            opacity: [0.2, 0.4, 0.2],
+            scale: [0.85, 1.05, 0.85]
+          }}
+          transition={{ 
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut"
+          }}
+        />
+        <svg viewBox="0 0 100 100" className="w-full h-full text-indigo-500 dark:text-indigo-300 relative z-10">
+          <motion.path
+            d="M50,15 C30,15 15,30 15,50 C15,70 30,85 50,85 C70,85 85,70 85,50 C85,30 70,15 50,15 Z"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ 
+              duration: 2,
+              ease: "easeOut",
+              delay: 0.2
+            }}
+          />
+          <motion.path
+            d={animals[currentAnimalIndex].name === "Fox" ? 
+              "M35,40 L30,30 L40,35 M65,40 L70,30 L60,35 M40,55 C45,65 55,65 60,55 M40,75 L60,75 L50,85 Z" :
+              animals[currentAnimalIndex].name === "Owl" ? 
+              "M35,35 C25,25 25,45 35,40 M65,35 C75,25 75,45 65,40 M45,55 L55,55 M35,65 C40,75 60,75 65,65 Z" :
+              animals[currentAnimalIndex].name === "Bear" ? 
+              "M30,35 C25,30 25,40 30,40 M70,35 C75,30 75,40 70,40 M45,60 L55,60 M40,70 C45,80 55,80 60,70 Z" :
+              "M30,40 C25,30 25,45 30,40 M70,40 C75,30 75,45 70,40 M35,60 L65,60 M40,70 C50,80 60,70 50,60 Z"}
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            key={animals[currentAnimalIndex].name}
+            transition={{ duration: 0.4, delay: 0.5 }}
+          />
+        </svg>
+      </div>
+      <motion.p 
+        className="text-indigo-500 dark:text-indigo-300 font-medium tracking-wide text-sm uppercase"
+        animate={{ 
+          opacity: [0.8, 1, 0.8],
+        }}
+        transition={{ 
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        {animals[currentAnimalIndex].name} • {animals[currentAnimalIndex].trait}
+      </motion.p>
+    </motion.div>
+
+    {/* Text transition effects */}
+    <div className="pb-10 flex items-center justify-center overflow-hidden">
+      <AnimatePresence mode="wait">
+        <motion.h1 
+          key={phrases[currentPhraseIndex]}
+          className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white tracking-tight"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -30, opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <motion.div
-            className="mb-6"
-            initial="initial"
-            animate="animate"
-            variants={floatAnimation}
-          >
-            <div className="w-24 h-24 md:w-32 md:h-32  mx-auto mb-6 relative">
-              {/* Glowing effect behind logo */}
-              <motion.div 
-                className="absolute inset-0 bg-indigo-500 dark:bg-indigo-600 rounded-full filter blur-xl"
-                animate={{ 
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [0.8, 1.1, 0.8]
-                }}
-                transition={{ 
-                  duration: 4,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              />
-              <svg viewBox="0 0 100 100" className="w-full  h-full text-indigo-600 dark:text-indigo-400 relative z-10">
-                <motion.path
-                  d="M50,10 C25,10 5,30 5,50 C5,70 25,90 50,90 C75,90 95,70 95,50 C95,30 75,10 50,10 Z"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  fill="none"
-                  initial={{ pathLength: 0, strokeDasharray: "0 1" }}
-                  animate={{ 
-                    pathLength: 1, 
-                    strokeDasharray: "1 0",
-                  }}
-                  transition={{ 
-                    duration: 2, 
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatType: "loop", 
-                    repeatDelay: 1 
-                  }}
-                />
-                <motion.path
-                  d={animals[currentAnimalIndex].name === "Fox" ? 
-                     "M35,40 L30,30 L40,35 M65,40 L70,30 L60,35 M40,55 C45,65 55,65 60,55 M40,75 L60,75 L50,85 Z" :
-                     animals[currentAnimalIndex].name === "Owl" ? 
-                     "M35,35 C25,25 25,45 35,40 M65,35 C75,25 75,45 65,40 M45,55 L55,55 M35,65 C40,75 60,75 65,65 Z" :
-                     animals[currentAnimalIndex].name === "Bear" ? 
-                     "M30,35 C25,30 25,40 30,40 M70,35 C75,30 75,40 70,40 M45,60 L55,60 M40,70 C45,80 55,80 60,70 Z" :
-                     "M30,40 C25,30 25,45 30,40 M70,40 C75,30 75,45 70,40 M35,60 L65,60 M40,70 C50,80 60,70 50,60 Z"}
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  fill="none"
-                  strokeLinecap="round"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  key={animals[currentAnimalIndex].name}
-                  transition={{ duration: 0.5 }}
-                />
-              </svg>
-            </div>
-            <motion.p 
-              className="text-indigo-600 dark:text-indigo-400 font-semibold"
-              animate={{ 
-                opacity: [0.7, 1, 0.7],
-                scale: [0.98, 1.02, 0.98]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity
-              }}
-            >
-              {animals[currentAnimalIndex].name} • {animals[currentAnimalIndex].trait}
-            </motion.p>
-          </motion.div>
+          {phrases[currentPhraseIndex]}
+        </motion.h1>
+      </AnimatePresence>
+    </div>
 
-          {/* Text transition effects */}
-          <div className="pb-7  flex items-center justify-center overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.h1 
-                key={phrases[currentPhraseIndex]}
-                className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white "
-                initial={{ y: 40, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -40, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                {phrases[currentPhraseIndex]}
-              </motion.h1>
-            </AnimatePresence>
-          </div>
-
-          <motion.p 
-            className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto"
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-          >
-            Buy and sell unused tokens at minimal cost. Get access to premium content 
-            without breaking the bank. Our marketplace connects token holders with 
-            content seekers for a win-win exchange.
-          </motion.p>
-          
-          <motion.div 
-            className="flex flex-col sm:flex-row justify-center gap-4"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.button 
-              variants={fadeInUp}
-              whileHover="hover"
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/marketplace')} 
-              className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium rounded-lg transition-all duration-300 text-lg hover:shadow-lg"
-              custom={buttonHoverEffects}
-            >
-              <motion.span className="flex items-center justify-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                Browse Marketplace
-              </motion.span>
-            </motion.button>
-            <motion.button 
-              variants={fadeInUp}
-              whileHover="hover"
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/login')} 
-              className="px-8 py-3 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 font-medium rounded-lg transition-all duration-300 text-lg hover:shadow-lg"
-              custom={buttonHoverEffects}
-            >
-              <motion.span className="flex items-center justify-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                </svg>
-                JOIN US NOW
-              </motion.span>
-            </motion.button>
-          </motion.div>
-          
-          {/* Scroll indicator */}
-        
-           
-          </motion.div>
-       
-      </motion.section>
-
+    <motion.p 
+      className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed"
+      variants={fadeInUp}
+      initial="hidden"
+      animate="visible"
+      transition={{ delay: 0.2, duration: 0.7 }}
+    >
+      Buy and sell unused tokens at minimal cost. Get access to premium content 
+      without breaking the bank. Our marketplace connects token holders with 
+      content seekers for a win-win exchange.
+    </motion.p>
+    
+    <motion.div 
+      className="flex flex-col sm:flex-row justify-center gap-5"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.button 
+        variants={fadeInUp}
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        onClick={() => navigate('/marketplace')} 
+        className="px-8 py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-xl transition-all duration-200 text-lg shadow-md"
+        custom={buttonHoverEffects}
+      >
+        <motion.span className="flex items-center justify-center">
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          Browse Marketplace
+        </motion.span>
+      </motion.button>
+      <motion.button 
+        variants={fadeInUp}
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        onClick={() => navigate('/login')} 
+        className="px-8 py-4 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 font-medium rounded-xl transition-all duration-200 text-lg shadow-md"
+        custom={buttonHoverEffects}
+      >
+        <motion.span className="flex items-center justify-center">
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+          </svg>
+          Join Us Now
+        </motion.span>
+      </motion.button>
+    </motion.div>
+    
+  
+    
+  </motion.div>
+</motion.section>
       {/* Features Section with Scroll Animation */}
       <motion.section 
         className="py-16 px-4"
