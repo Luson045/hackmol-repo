@@ -29,7 +29,7 @@ function decrypt(encrypted) {
   } catch (err) {
     console.error('Decryption failed:', encrypted);
     console.error(err.message);
-    return '[DECRYPTION_ERROR]';
+    return '[DECRYPTION_ERROR]'; // Or null if you prefer
   }
 }
 
