@@ -307,7 +307,11 @@ const Dashboard = () => {
   useEffect(() => {
     // Only run when the component first mounts and user is loaded
     const handleLoginTour = async () => {
-      if (!loading && user) {
+      console.log(user);
+      if(!user.firstuser){
+        return;
+      }
+      else if (!loading && user) {
         // Check if authentication just happened by looking at token timestamp
         const authToken = localStorage.getItem('token');
         
@@ -324,6 +328,9 @@ const Dashboard = () => {
               setTimeout(() => {
                 startTour();
               }, 1000);
+              
+              const res = await axios.post('/api/users/flag',{userId:user.id});
+              console.log(res);
             }
           } catch (error) {
             console.error('Error checking login status:', error);
