@@ -14,6 +14,10 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+var corsOptions = {
+  origin: ['http://localhost:5173','https://hackmol-repo.vercel.app'],
+  optionsSuccessStatus: 200
+}
 app.use(cors());
 app.use(cookieParser());
 
