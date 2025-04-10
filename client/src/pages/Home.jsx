@@ -696,17 +696,16 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Featured Tokens with Staggered Animation - Completely Redesigned */}
+      {/* Featured Tokens with Staggered Animation - Performance Optimized */}
       <motion.section 
         className="py-16 px-4 bg-gradient-to-b from-black to-gray-900 content-section"
         ref={tokensRef}
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.7 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
         style={{ zIndex: 10, position: 'relative' }}
       >
-        {/* Background grid for section */}
+        {/* Static grid background instead of animated */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: `
             linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
@@ -717,46 +716,25 @@ const Home = () => {
         }} />
         
         <div className="max-w-6xl mx-auto relative">
-          {/* Floating orbs in background */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={`token-orb-${i}`}
-              className="absolute rounded-full blur-3xl opacity-20"
-              style={{
-                width: `${Math.random() * 300 + 200}px`,
-                height: `${Math.random() * 300 + 200}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                background: `radial-gradient(circle at center, 
-                  rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 255, 0.3) 0%, 
-                  transparent 70%)`,
-                zIndex: 0
-              }}
-              animate={{
-                x: [0, Math.random() * 80 - 40],
-                y: [0, Math.random() * 80 - 40],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: Math.random() * 10 + 10,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut"
-              }}
-            />
-          ))}
+          {/* Reduced number of background elements */}
+          <div className="absolute left-1/4 top-1/4 w-64 h-64 rounded-full blur-3xl opacity-10"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(120, 120, 255, 0.2) 0%, transparent 70%)',
+              transform: 'translateZ(0)'
+            }}
+          />
+          <div className="absolute right-1/4 bottom-1/4 w-64 h-64 rounded-full blur-3xl opacity-10"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(180, 120, 255, 0.2) 0%, transparent 70%)',
+              transform: 'translateZ(0)'
+            }}
+          />
           
-          <motion.h2 
-            className="text-3xl md:text-5xl font-bold text-center text-white mb-12 permanent-visible"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <h2 className="text-3xl md:text-5xl font-bold text-center text-white mb-12 permanent-visible">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">
               Featured Tokens
             </span>
-          </motion.h2>
+          </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
@@ -765,231 +743,155 @@ const Home = () => {
                 discount: "25% off", 
                 icon: <FaRobot />, 
                 color: "from-emerald-500 to-teal-500",
-                bgColor: "rgba(16, 185, 129, 0.05)",
-                hue: 160
+                baseColor: "#10b981",
+                textColor: "text-emerald-500"
               },
               { 
                 platform: "Claude", 
                 discount: "30% off", 
                 icon: <FaSmile />, 
                 color: "from-violet-500 to-purple-500",
-                bgColor: "rgba(139, 92, 246, 0.05)",
-                hue: 270
+                baseColor: "#8b5cf6",
+                textColor: "text-violet-500"
               },
               { 
                 platform: "Gemini", 
                 discount: "40% off", 
                 icon: <FaStar />, 
                 color: "from-blue-500 to-indigo-500",
-                bgColor: "rgba(59, 130, 246, 0.05)",
-                hue: 220
+                baseColor: "#3b82f6",
+                textColor: "text-blue-500"
               },
               { 
                 platform: "Anthropic", 
                 discount: "20% off", 
                 icon: <FaBrain />, 
                 color: "from-pink-500 to-rose-500",
-                bgColor: "rgba(236, 72, 153, 0.05)",
-                hue: 330
+                baseColor: "#ec4899",
+                textColor: "text-pink-500"
               },
               { 
                 platform: "Bard", 
                 discount: "35% off", 
                 icon: <FaPen />, 
                 color: "from-amber-500 to-yellow-500",
-                bgColor: "rgba(245, 158, 11, 0.05)",
-                hue: 45
+                baseColor: "#f59e0b",
+                textColor: "text-amber-500"
               },
               { 
                 platform: "Llama", 
                 discount: "15% off", 
                 icon: <FaMagic />, 
                 color: "from-indigo-500 to-blue-500",
-                bgColor: "rgba(99, 102, 241, 0.05)",
-                hue: 240
+                baseColor: "#6366f1",
+                textColor: "text-indigo-500"
               }
             ].map((item, index) => (
-              <motion.div 
+              <div 
                 key={index}
-                className="group overflow-hidden cursor-pointer relative h-[280px] sm:h-[320px] permanent-visible"
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                custom={index}
+                className="group overflow-hidden cursor-pointer relative h-[280px] sm:h-[320px] bg-gray-800 rounded-2xl border border-gray-700/50 shadow-lg will-change-transform permanent-visible"
                 style={{
-                  transformStyle: "preserve-3d",
-                  perspective: "1000px"
+                  transform: "translateZ(0)",
+                  boxShadow: `0 0 20px 0 rgba(0,0,0,0.5)`
                 }}
               >
-                {/* Background gradient animation */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl overflow-hidden"
-                  animate={{
-                    background: [
-                      `linear-gradient(45deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
-                      `linear-gradient(135deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
-                      `linear-gradient(225deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
-                      `linear-gradient(315deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`,
-                      `linear-gradient(45deg, ${item.bgColor} 0%, rgba(0,0,0,0) 70%)`
-                    ]
-                  }}
-                  transition={{
-                    duration: 15,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                />
+                {/* Static gradient border instead of animated */}
+                <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-50" style={{
+                  background: `linear-gradient(45deg, rgba(${item.baseColor.replace('#', '')}, 0.15) 0%, transparent 70%)`,
+                  transform: "translateZ(0)"
+                }} />
                 
-                {/* Card content container */}
-                <motion.div 
-                  className="absolute inset-0 bg-gray-800/30 backdrop-blur-md rounded-2xl border border-gray-700/50 overflow-hidden shadow-lg z-10"
-                  whileHover={{ 
-                    scale: 1.02,
-                    transition: { 
-                      type: "spring", 
-                      stiffness: 300, 
-                      damping: 15 
-                    }
-                  }}
-                  style={{
-                    boxShadow: `0 0 20px 0 ${item.bgColor}`,
-                  }}
-                >
-                  {/* Animated light effects */}
-                  <div className="absolute inset-0 overflow-hidden">
-                    <motion.div 
-                      className="w-full h-full absolute opacity-20"
-                      style={{
-                        background: `conic-gradient(from ${item.hue}deg at 50% 50%, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.8) 60deg, rgba(255,255,255,0) 120deg)`,
-                      }}
-                      animate={{
-                        transform: ["rotate(0deg)", "rotate(360deg)"]
-                      }}
-                      transition={{
-                        duration: 15,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    />
+                {/* Header with icon */}
+                <div className="pt-6 px-6 flex items-center">
+                  <div
+                    className={`w-14 h-14 flex items-center justify-center rounded-full text-white text-2xl bg-gradient-to-br ${item.color} transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                  >
+                    {item.icon}
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-2xl font-bold text-white permanent-visible mb-1">
+                      {item.platform}
+                    </h3>
+                    <div className="flex items-center">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="text-gray-400 text-sm ml-2">(120+ users)</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 mt-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-gray-400 text-sm">Price</span>
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-white mr-2">
+                          {item.discount}
+                        </span>
+                        <span className="text-gray-400 line-through text-sm">Regular</span>
+                      </div>
+                    </div>
+                    <div 
+                      className={`px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.color} text-white transform transition-transform duration-300 group-hover:scale-105`}
+                    >
+                      Most Popular
+                    </div>
                   </div>
                   
-                  {/* Header with icon */}
-                  <div className="pt-6 px-6 flex items-center">
-                    <motion.div
-                      className={`w-14 h-14 flex items-center justify-center rounded-full text-white text-2xl bg-gradient-to-br ${item.color}`}
-                      whileHover={{ 
-                        scale: 1.1,
-                        rotate: 5,
-                        boxShadow: `0 0 15px 0 ${item.bgColor.replace('0.05', '0.3')}`
-                      }}
-                    >
-                      {item.icon}
-                    </motion.div>
-                    <div className="ml-4">
-                      <h3 className="text-2xl font-bold text-white permanent-visible mb-1">
-                        {item.platform}
-                      </h3>
-                      <div className="flex items-center">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                          ))}
-                        </div>
-                        <span className="text-gray-400 text-sm ml-2">(120+ users)</span>
-                      </div>
+                  <div className="mt-6 space-y-4">
+                    <div className="flex items-center text-gray-300">
+                      <svg className="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Premium access included</span>
+                    </div>
+                    <div className="flex items-center text-gray-300">
+                      <svg className="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>No expiration date</span>
                     </div>
                   </div>
-
-                  {/* Content */}
-                  <div className="p-6 mt-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <span className="text-gray-400 text-sm">Price</span>
-                        <div className="flex items-baseline">
-                          <span className="text-3xl font-bold text-white mr-2">
-                            {item.discount}
-                          </span>
-                          <span className="text-gray-400 line-through text-sm">Regular</span>
-                        </div>
-                      </div>
-                      <motion.div 
-                        className={`px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.color} text-white`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Most Popular
-                      </motion.div>
-                    </div>
-                    
-                    <div className="mt-6 space-y-4">
-                      <div className="flex items-center text-gray-300">
-                        <svg className="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>Premium access included</span>
-                      </div>
-                      <div className="flex items-center text-gray-300">
-                        <svg className="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>No expiration date</span>
-                      </div>
-                    </div>
-                    
-                    <motion.button 
-                      className={`mt-8 w-full py-3 rounded-xl text-white font-medium bg-gradient-to-r ${item.color} relative overflow-hidden`}
-                      whileHover={{ 
-                        scale: 1.03,
-                        boxShadow: `0 0 20px 0 ${item.bgColor.replace('0.05', '0.2')}`
-                      }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <motion.span 
-                        className="absolute inset-0 w-0 bg-white opacity-20"
-                        initial={{ width: "0%" }}
-                        whileHover={{ 
-                          width: "100%",
-                          transition: { duration: 0.3 }
-                        }}
-                      />
-                      <span className="relative flex items-center justify-center">
-                        View Token Details
-                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                      </span>
-                    </motion.button>
-                  </div>
-                </motion.div>
-              </motion.div>
+                  
+                  <button 
+                    className={`mt-8 w-full py-3 rounded-xl text-white font-medium bg-gradient-to-r ${item.color} relative overflow-hidden transform transition-all duration-300 group-hover:scale-[1.02]`}
+                    style={{
+                      transform: "translateZ(0)"
+                    }}
+                  >
+                    <div className="absolute inset-0 w-0 bg-white opacity-20 group-hover:w-full transition-all duration-300 ease-out" />
+                    <span className="relative flex items-center justify-center">
+                      View Token Details
+                      <svg className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
           
           {/* View more button */}
           <div className="flex justify-center mt-12">
-            <motion.button
-              className="group relative px-6 py-3 text-white font-medium overflow-hidden rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
+              className="group relative px-6 py-3 text-white font-medium overflow-hidden rounded-xl bg-gray-800 border border-gray-700/50 transform transition-transform duration-300 hover:scale-105"
+              style={{ transform: "translateZ(0)" }}
             >
-              <motion.span 
-                className="absolute inset-0 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-50"
-                initial={{ width: "0%" }}
-                whileHover={{ 
-                  width: "100%",
-                  transition: { duration: 0.3 }
-                }}
-              />
+              <div className="absolute inset-0 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-30 group-hover:w-full transition-all duration-300 ease-out" />
               <span className="relative flex items-center justify-center">
                 View All Tokens
-                <svg className="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>
               </span>
-            </motion.button>
+            </button>
           </div>
         </div>
       </motion.section>
@@ -1006,83 +908,226 @@ const Home = () => {
         <SuccessStories />
       </motion.div>
 
-      {/* Platforms Showcase Section */}
-      <motion.section
+      {/* Platforms Showcase Section - Enhanced */}
+      <section
         className="py-16 px-4 bg-gradient-to-b from-gray-900 to-black content-section"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
         style={{ zIndex: 10, position: 'relative' }}
       >
-        <div className="max-w-6xl mx-auto">
-          <motion.h2
-            className="text-3xl font-bold text-center text-white mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Compatible with Your Favorite Platforms
-          </motion.h2>
+        {/* Static grid background */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
+        }} />
+        
+        <div className="max-w-6xl mx-auto relative">
+          {/* Background accent */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+            <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2" 
+              style={{
+                background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 60%)',
+                transform: 'translateZ(0)'
+              }}
+            />
+          </div>
           
-          <motion.div 
-            className="flex flex-wrap justify-center gap-6 md:gap-10"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+          <h2
+            className="text-3xl md:text-5xl font-bold text-center mb-6 permanent-visible"
           >
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">
+              Compatible AI Models
+            </span>
+          </h2>
+          
+          <p className="text-gray-300 text-center max-w-3xl mx-auto mb-16">
+            Token Flow supports a wide range of AI models and platforms, allowing you to maximize the value of your subscriptions across the entire AI ecosystem.
+          </p>
+          
+          {/* AI Model Grid - Improved responsive design */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
             {[
-              "StreamFlix", "MusicOwl", "LearnBear", "GamingBull", 
-              "FitFox", "NewsOwl", "CodeDeer", "PodcastRaven"
-            ].map((platform, index) => (
-              <motion.div
+              {
+                name: "ChatGPT",
+                subtitle: "OpenAI",
+                color: "from-emerald-600 to-teal-600",
+                icon: <FaRobot className="w-5 h-5" />,
+                accent: "emerald"
+              },
+              {
+                name: "Claude",
+                subtitle: "Anthropic",
+                color: "from-violet-600 to-purple-600",
+                icon: <FaSmile className="w-5 h-5" />,
+                accent: "violet"
+              },
+              {
+                name: "Gemini",
+                subtitle: "Google",
+                color: "from-blue-600 to-indigo-600",
+                icon: <FaStar className="w-5 h-5" />,
+                accent: "blue"
+              },
+              {
+                name: "GPT-4o",
+                subtitle: "OpenAI",
+                color: "from-pink-600 to-rose-600",
+                icon: <FaBrain className="w-5 h-5" />,
+                accent: "pink"
+              },
+              {
+                name: "Bard",
+                subtitle: "Google",
+                color: "from-amber-600 to-yellow-600",
+                icon: <FaPen className="w-5 h-5" />,
+                accent: "amber"
+              },
+              {
+                name: "Llama",
+                subtitle: "Meta AI",
+                color: "from-indigo-600 to-blue-600",
+                icon: <FaMagic className="w-5 h-5" />,
+                accent: "indigo"
+              },
+              {
+                name: "Mistral",
+                subtitle: "Mistral AI",
+                color: "from-cyan-600 to-sky-600",
+                icon: <FaRobot className="w-5 h-5" />,
+                accent: "cyan"
+              },
+              {
+                name: "Palm",
+                subtitle: "Google",
+                color: "from-lime-600 to-green-600",
+                icon: <FaPen className="w-5 h-5" />,
+                accent: "lime"
+              },
+              {
+                name: "Claude 3",
+                subtitle: "Anthropic",
+                color: "from-fuchsia-600 to-pink-600",
+                icon: <FaBrain className="w-5 h-5" />,
+                accent: "fuchsia"
+              },
+              {
+                name: "GPT-3.5",
+                subtitle: "OpenAI",
+                color: "from-emerald-600 to-teal-600",
+                icon: <FaStar className="w-5 h-5" />,
+                accent: "emerald"
+              }
+            ].map((model, index) => (
+              <div
                 key={index}
-                className="flex items-center justify-center p-4 bg-gray-800 rounded-lg shadow-md hover:shadow-lg border border-gray-700 transition-all duration-300 w-full sm:w-auto"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)",
-                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                className={`group rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-lg border border-gray-700/50 bg-gray-800/70 backdrop-blur-sm shadow-md hover:shadow-${model.accent}-900/20 permanent-visible`}
+                style={{ 
+                  transform: "translateZ(0)",
+                  animation: `fadeIn 500ms ${index * 50}ms both`
                 }}
               >
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-400 to-blue-500 text-white">
-                    {platform.charAt(0)}
+                <div className={`p-3 sm:p-4 flex flex-col`}>
+                  <div className="flex items-center mb-3">
+                    <div className={`w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-br ${model.color} text-white`}>
+                      {model.icon}
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-semibold text-white">{model.name}</h3>
+                      <p className="text-xs text-gray-400">{model.subtitle}</p>
+                    </div>
                   </div>
-                  <span className="font-medium text-white">
-                    {platform}
-                  </span>
+                  
+                  <div className="flex items-center justify-between mt-auto">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-gray-400">Tokens:</span>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <div 
+                            key={i} 
+                            className={`w-2 h-2 rounded-full mx-px ${i < 4 ? 'bg-green-500' : 'bg-gray-600'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full bg-${model.accent}-900/20 text-${model.accent}-400`}>
+                      Available
+                    </span>
+                  </div>
                 </div>
-              </motion.div>
+                
+                {/* Hover gradient overlay */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300" style={{
+                  background: `linear-gradient(45deg, var(--${model.accent}-500), transparent)`,
+                }} />
+              </div>
             ))}
-          </motion.div>
+          </div>
+          
+          {/* View all platforms button */}
+          <div className="flex justify-center mt-12">
+            <button
+              className="group relative px-6 py-3 text-white font-medium overflow-hidden rounded-xl bg-gray-800 border border-gray-700/50 transform transition-transform duration-300 hover:scale-105"
+              style={{ transform: "translateZ(0)" }}
+            >
+              <div className="absolute inset-0 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-30 group-hover:w-full transition-all duration-300 ease-out" />
+              <span className="relative flex items-center justify-center">
+                Explore All AI Models
+                <svg className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </span>
+            </button>
+          </div>
+          
+          {/* Add keyframes for fade in animation */}
+          <style jsx>{`
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(10px) translateZ(0); }
+              to { opacity: 1; transform: translateY(0) translateZ(0); }
+            }
+          `}</style>
         </div>
-      </motion.section>
+      </section>
 
-      {/* FAQ Section with Accordion */}
-      <motion.section
+      {/* FAQ Section with Accordion - Performance Optimized */}
+      <section
         className="py-16 px-4 bg-gradient-to-b from-black to-gray-900 content-section"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
         style={{ zIndex: 10, position: 'relative' }}
       >
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            className="text-3xl font-bold text-center text-white mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+        {/* Static grid background */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
+        }} />
+
+        <div className="max-w-4xl mx-auto relative">
+          {/* Background decorative elements */}
+          <div className="absolute -left-12 -top-12 w-64 h-64 rounded-full blur-3xl opacity-5"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(120, 120, 255, 0.5) 0%, transparent 70%)',
+              transform: 'translateZ(0)'
+            }}
+          />
+          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full blur-3xl opacity-5"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(180, 120, 255, 0.5) 0%, transparent 70%)',
+              transform: 'translateZ(0)'
+            }}
+          />
+          
+          <h2
+            className="text-3xl md:text-5xl font-bold text-center text-white mb-12 permanent-visible"
           >
-            Frequently Asked Questions
-          </motion.h2>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">
+              Frequently Asked Questions
+            </span>
+          </h2>
           
           <div className="space-y-4">
             {[
@@ -1103,60 +1148,111 @@ const Home = () => {
                 answer: "On average, buyers save about 30% compared to retail prices. Savings vary by platform and current market conditions, with some deals offering up to 50% off."
               }
             ].map((faq, index) => (
-              <FAQItem key={index} question={faq.question} answer={faq.answer} index={index} />
+              <OptimizedFAQItem key={index} question={faq.question} answer={faq.answer} index={index} />
             ))}
           </div>
+          
+          {/* Decorative line */}
+          <div className="mt-16 h-px w-full bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"></div>
+          
+          {/* Contact CTA */}
+          <div className="mt-12 text-center">
+            <p className="text-gray-300 mb-6">
+              Still have questions? We're here to help!
+            </p>
+            <button
+              className="group relative px-6 py-3 text-white font-medium overflow-hidden rounded-xl bg-gray-800 border border-gray-700/50 transform transition-transform duration-300 hover:scale-105"
+              style={{ transform: "translateZ(0)" }}
+            >
+              <div className="absolute inset-0 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-30 group-hover:w-full transition-all duration-300 ease-out" />
+              <span className="relative flex items-center justify-center">
+                Contact Support
+                <svg className="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+              </span>
+            </button>
+          </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 };
 
-// FAQ Accordion Item Component
-const FAQItem = ({ question, answer, index }) => {
+// Optimized FAQ Item Component with CSS transitions
+const OptimizedFAQItem = ({ question, answer, index }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const answerRef = useRef(null);
   
   return (
-    <motion.div 
-      className="border border-gray-700 rounded-lg overflow-hidden permanent-visible"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
+    <div 
+      className={`border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 transform ${isOpen ? 'border-indigo-500/50 shadow-lg shadow-indigo-500/10' : 'hover:border-gray-600'} permanent-visible`}
+      style={{ 
+        transform: "translateZ(0)",
+        willChange: "transform, box-shadow",
+        transitionDelay: `${index * 50}ms`,
+        opacity: 1,
+        animation: `fadeIn 500ms ${index * 100}ms both`
+      }}
     >
-      <motion.button
-        className="w-full text-left p-4 flex justify-between items-center bg-gray-800 hover:bg-gray-700 transition-colors duration-200 permanent-visible"
+      <button
+        className="w-full text-left p-5 flex justify-between items-center bg-gray-800 hover:bg-gray-750 transition-colors duration-200 permanent-visible"
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ backgroundColor: isOpen ? "inherit" : "rgba(255,255,255,0.05)" }}
+        aria-expanded={isOpen}
       >
-        <h3 className="text-lg font-medium text-white permanent-visible">{question}</h3>
-        <motion.svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="h-5 w-5 text-gray-400 permanent-visible" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
+        <h3 className="text-xl font-medium text-white permanent-visible group-hover:text-indigo-300 transition-colors duration-200">
+          {question}
+        </h3>
+        <div 
+          className={`h-8 w-8 rounded-full flex items-center justify-center bg-gray-700 text-white transform transition-transform duration-300 ${isOpen ? 'rotate-180 bg-indigo-600' : ''}`}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </motion.svg>
-      </motion.button>
-      
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div 
-            className="bg-gray-700 p-4 permanent-visible"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+          <svg 
+            className="w-5 h-5" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
           >
-            <p className="text-gray-300 permanent-visible">{answer}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+      
+      <div 
+        ref={answerRef}
+        className={`bg-gray-750 overflow-hidden transition-all duration-300 ease-in-out permanent-visible`} 
+        style={{ 
+          maxHeight: isOpen ? `${answerRef.current ? answerRef.current.scrollHeight : 300}px` : "0px",
+          opacity: isOpen ? 1 : 0
+        }}
+      >
+        <div className="p-5 border-t border-gray-700">
+          <p className="text-gray-300 leading-relaxed permanent-visible">
+            {answer}
+          </p>
+          
+          {/* Extra action link at the end of each answer */}
+          <div className="mt-4 flex justify-end">
+            <a 
+              href="#" 
+              className="text-indigo-400 inline-flex items-center hover:text-indigo-300 transition-colors duration-200 permanent-visible"
+            >
+              <span>Learn more</span>
+              <svg className="w-4 h-4 ml-1 transform transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      {/* Add keyframes for the fade in animation */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
   );
 };
 
