@@ -2712,7 +2712,7 @@
   /* Help button to start the tour */
   .help-button {
     position: fixed;
-    bottom: 2rem;
+    bottom: 300vh;
     right: 2rem;
     width: 50px;
     height: 50px;
@@ -2924,7 +2924,7 @@
     }
     
     .help-button {
-      bottom: 1.5rem;
+      bottom: 5rem;
       right: 1.5rem;
     }
   }
@@ -2954,10 +2954,10 @@
   /* User Guide / Tour styles */
   .help-button {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
+    bottom: 5rem;
+    right: 1.5rem;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
@@ -2970,7 +2970,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     transition: all 0.3s ease;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   
   .help-button span {
