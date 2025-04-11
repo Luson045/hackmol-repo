@@ -129,7 +129,7 @@ const Dashboard = () => {
     {
       title: "API Keys Management",
       description: "View and manage your API keys from this section.",
-      target: ".dashboard-card"
+      target: ".api-keys-section" // Updated target for more specificity
     },
     {
       title: "User Profile",
@@ -212,11 +212,33 @@ const Dashboard = () => {
     // For buyer and seller headers in the sidebar
     if (element.closest('.sidebar-role-separator')) {
       // Position at a fixed distance from the sidebar
-      // This matches the screenshot positioning
       left = `${sidebarWidth + 50}px`;
       
       // Align with the element's top
       top = `${elementRect.top - 20}px`;
+    }
+    // Special positioning for API Keys section - position BELOW instead of above
+    else if (element.classList.contains('api-keys-section')) {
+      // Position centered horizontally BELOW the API Keys section
+      left = `${elementRect.left + (elementRect.width / 2) - (modalRect.width / 2)}px`;
+      
+      // Get the height of the element
+      const elementHeight = elementRect.height;
+      
+      // Position below the element
+      top = `${elementRect.top + elementHeight + 20}px`;
+      
+      // If too close to the bottom, adjust
+      if (elementRect.top + elementHeight + modalRect.height + 40 > viewportHeight) {
+        // Try positioning to the right side instead
+        left = `${elementRect.right + 20}px`;
+        top = `${elementRect.top + (elementHeight / 2) - (modalRect.height / 2)}px`;
+        
+        // If still off-screen, put it at the bottom of the viewport
+        if (parseFloat(left) + modalRect.width > viewportWidth - 20) {
+          left = `${viewportWidth - modalRect.width - 20}px`;
+        }
+      }
     }
     // Try to position to the right of the element
     else if (elementRect.right + modalRect.width + 20 < viewportWidth) {
@@ -1004,6 +1026,14 @@ const Dashboard = () => {
           </div>
           
           <div
+            className={`sidebar-menu-item ${activeTab === 'payment' ? 'active' : ''}`}
+            onClick={() => handleTabChange('payment')}
+          >
+            <FiDollarSign />
+            <span>Add Funds</span>
+          </div>
+          
+          <div
             className={`sidebar-menu-item ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => handleTabChange('settings')}
           >
@@ -1071,9 +1101,7 @@ const Dashboard = () => {
                     <div className="stats-value">
                       <CountUp end={apiKeys.length || 0} duration={2.5} />
                     </div>
-                    <div className="stats-trend">
-                      <BsArrowUpRight /> +2 this month
-                    </div>
+                    
                   </div>
                 </div>
               </motion.div>
@@ -1091,9 +1119,7 @@ const Dashboard = () => {
                     <div className="stats-value">
                       <CountUp end={temporaryTokens.length || 7} duration={2.5} />
                     </div>
-                    <div className="stats-trend positive">
-                      <BsArrowUpRight /> +{todayGain}% today
-                    </div>
+                   
                   </div>
                 </div>
               </motion.div>
@@ -1111,9 +1137,7 @@ const Dashboard = () => {
                     <div className="stats-value">
                       <CountUp end={userAmount} prefix="Rs " decimals={2} duration={2.5} />
                     </div>
-                    <div className={`stats-trend ${weeklyGrowth > 0 ? 'positive' : 'negative'}`}>
-                      {weeklyGrowth > 0 ? <BsArrowUpRight /> : <BsArrowDownRight />} {Math.abs(weeklyGrowth)}% this week
-                    </div>
+                   
                   </div>
                 </div>
               </motion.div>
@@ -1121,7 +1145,7 @@ const Dashboard = () => {
 
             {/* API Keys Section */}
             <motion.div 
-              className="dashboard-card"
+              className="dashboard-card api-keys-section"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, type: "spring" }}
