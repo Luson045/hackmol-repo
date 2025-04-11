@@ -29,13 +29,14 @@ router.get('/api-keys', auth, async (req, res) => {
   }
 });
 
-router.get('/flag',auth, async(req,res)=>{
+router.post('/flag',auth, async(req,res)=>{
   try{
-    const {userId, amount} = req.body;
+    const {userId} = req.body;
     const user = await User.findById(userId);
-    const result = user.firstuser;
-    console.log(`firstuser: ${result }`);
-    return res.status(200).json({ message: result });
+    user.firstuser=false;
+    user.save();
+    console.log(`firstuser: ${user.firstuser }`);
+    return res.status(200).json({ message: user.firstuser });
   }catch(err){
     console.log(err);
     return res.status(500).json({ message: err });

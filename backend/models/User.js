@@ -10,7 +10,7 @@ const apiKeySchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  tokens: {
+  tokens:{
     type: Number,
     default: 0
   },
@@ -21,10 +21,6 @@ const apiKeySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  },
-  firstuser:{
-    type: Boolean,
-    default: true
   }
 });
 
@@ -62,6 +58,10 @@ const userSchema = new mongoose.Schema({
   amount:{
     type: Number,
     default:0
+  },
+  firstuser:{
+    type: Boolean,
+    default: true
   },
   role: {
     type: String,
