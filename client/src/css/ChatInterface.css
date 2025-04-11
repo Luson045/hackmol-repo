@@ -480,3 +480,42 @@
       transform: translateY(-6px);
     }
   }
+
+  .message-container {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  
+  .message-timestamp {
+    font-size: 0.75rem;
+    color: gray;
+    text-align: right;
+    margin-bottom: 0.3rem;
+    padding-right: 5px;
+  }
+  
+  .code-block-wrapper {
+    position: relative;
+  }
+  
+  .copy-button {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: #eee;
+    border: none;
+    padding: 3px 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 4px;
+    z-index: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  
+  .copy-button:hover {
+    opacity: 1;
+  }
+  
+
+  

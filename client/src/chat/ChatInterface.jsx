@@ -1,8 +1,54 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import ChatMessage from './ChatMessage';
+import ReactMarkdown from 'react-markdown';
 import ApiKeySelector from './ApiKeySelector';
+import "../css/ChatInterface.css";
+
+const MarkdownRenderer = ({ content }) => {
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Code copied to clipboard!');
+    });
+  };
+
+  const components = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || '');
+      const code = String(children).replace(/\n$/, '');
+
+      return !inline ? (
+        <div className="code-block-wrapper">
+          <button
+            className="copy-button"
+            onClick={() => copyToClipboard(code)}
+            title="Copy code"
+          >
+            📋
+          </button>
+          <pre className={className}>
+            <code {...props}>{code}</code>
+          </pre>
+        </div>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    }
+  };
+
+  return <ReactMarkdown components={components}>{content}</ReactMarkdown>;
+};
+
+
+const ChatMessage = ({ content, role }) => {
+  return (
+    <div className={`message ${role}`}>
+      <MarkdownRenderer content={content} />
+    </div>
+  );
+};
 
 const ChatInterface = () => {
   const { user } = useContext(AuthContext);
@@ -32,10 +78,10 @@ const ChatInterface = () => {
         // Select first available key
         if (tempKeysRes.data.length > 0) {
           const key = tempKeysRes.data[0];
-          setSelectedApiKey(`temp.${key._id}`);
+          setSelectedApiKey(`temp-${key._id}`);
         } else if (userKeysRes.data.length > 0) {
           const key = userKeysRes.data[0];
-          setSelectedApiKey(`user.${key._id}`);
+          setSelectedApiKey(`user-${key._id}`);
         }
       } catch (err) {
         console.error('Error fetching API keys:', err);
@@ -92,7 +138,6 @@ const ChatInterface = () => {
 
       // Get the actual key data to extract model name
       let modelId = '';
-      console.log(keyType);
       if (keyType === 'temp') {
         const keyData = temporaryKeys.find(k => k._id === keyId);
         if (!keyData) throw new Error('Selected temporary key not found');
@@ -108,23 +153,24 @@ const ChatInterface = () => {
       if (!modelId) {
         throw new Error('Could not determine model ID from key');
       }
-
+      const temp=input;
+      setInput('');
       // Make API request with all required fields
       const res = await axios.post('/api/llm/chat', {
-        message: input,
+        message: temp,
         keyType,
         keyId,
         modelId
       });
-
+      
       const assistantMessage = {
         role: 'assistant',
         content: res.data.response,
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, assistantMessage]);
 
+      setMessages(prev => [...prev, assistantMessage]);
       setTokenUsage(prev => ({
         prompt: prev.prompt + res.data.usage.promptTokens,
         completion: prev.completion + res.data.usage.completionTokens,
@@ -179,6 +225,13 @@ const ChatInterface = () => {
   };
 
   const selectedKeyInfo = getSelectedKeyInfo();
+
+  // Format timestamp
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <div className="chat-interface">
@@ -261,9 +314,8 @@ const ChatInterface = () => {
             <div className="messages-container">
               {messages.map((msg, index) => (
                 <div key={index} className={`message-container ${msg.role === 'user' ? 'user-message' : 'assistant-message'}`}>
-                  <div className={`message ${msg.role}`}>
-                    {msg.content}
-                  </div>
+                  <div className="message-timestamp">{formatTimestamp(msg.timestamp)}</div>
+                  <ChatMessage content={msg.content} role={msg.role} />
                 </div>
               ))}
               {isLoading && (

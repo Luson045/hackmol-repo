@@ -318,11 +318,11 @@ router.post('/chat', auth, async (req, res) => {
 async function handleProviderRequest(provider, message, modelId, apiKey) {
   switch (provider) {
     case 'openai':
-      return await handleOpenAIRequest(message, modelId, apiKey);
+      return await handleOpenAIRequest('Instruction: normally generate output without codes if user is sending normal query but if the user is telling to write code just follow this format: {code, very brief and short summary, output} (nothing else), Query: '+message+'Response: ', modelId, apiKey);
     case 'anthropic':
-      return await handleAnthropicRequest(message, modelId, apiKey);
+      return await handleAnthropicRequest('Instruction: normally generate output without codes if user is sending normal query but if the user is telling to write code just follow this format: {code, very brief and short summary, output} (nothing else), Query: '+message+'Response: ', modelId, apiKey);
     case 'gemini':
-      return await handleGeminiRequest(message, modelId, apiKey);
+      return await handleGeminiRequest('Instruction: normally generate output without codes if user is sending normal query but if the user is telling to write code just follow this format: {code, very brief and short summary, output} (nothing else), Query: '+message+'Response: ', modelId, apiKey);
     default:
       throw new Error('Unsupported provider');
   }
