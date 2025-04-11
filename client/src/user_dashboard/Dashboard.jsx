@@ -101,7 +101,10 @@ const Dashboard = () => {
   // Track if this is a login session
   const [isNewSession, setIsNewSession] = useState(true);
   
-  // Tour steps
+  // First, add a state to track which section is currently highlighted
+  const [highlightedSection, setHighlightedSection] = useState(null);
+  
+  // Updated Tour steps - point to buyer and seller headers instead of sidebar
   const tourSteps = [
     {
       title: "Welcome to TokenFlow Dashboard",
@@ -109,9 +112,14 @@ const Dashboard = () => {
       target: ".dashboard-header"
     },
     {
-      title: "Navigation Sidebar",
-      description: "Use this sidebar to navigate between different sections of the dashboard.",
-      target: ".sidebar-menu"
+      title: "Buyer Section",
+      description: "As a buyer, you can browse the marketplace and purchase tokens from sellers.",
+      target: ".sidebar-role-separator .buyer" // Target the buyer icon/header
+    },
+    {
+      title: "Seller Section", 
+      description: "As a seller, you can create and manage API keys to sell tokens to buyers.",
+      target: ".sidebar-role-separator .seller" // Target the seller icon/header
     },
     {
       title: "Dashboard Overview",
@@ -130,7 +138,7 @@ const Dashboard = () => {
     }
   ];
 
-  // Add an element highlight effect
+  // Updated addHighlight function to handle section highlighting
   const addHighlight = (element) => {
     if (element) {
       // Remove highlight from previous element if exists
@@ -138,21 +146,57 @@ const Dashboard = () => {
         highlightedElement.classList.remove('tour-highlight');
       }
       
+      // Remove any previous section highlights
+      if (highlightedSection) {
+        const sectionElements = document.querySelectorAll(`.${highlightedSection}-items`);
+        sectionElements.forEach(el => {
+          el.classList.remove('section-highlight');
+        });
+        setHighlightedSection(null);
+      }
+      
       // Add highlight to current element
       element.classList.add('tour-highlight');
       setHighlightedElement(element);
+      
+      // Special handling for buyer and seller sections
+      if (element.classList.contains('buyer')) {
+        // Highlight all buyer menu items
+        const buyerItems = document.querySelectorAll('.buyer-items');
+        buyerItems.forEach(item => {
+          item.classList.add('section-highlight');
+        });
+        setHighlightedSection('buyer');
+      } 
+      else if (element.classList.contains('seller')) {
+        // Highlight all seller menu items
+        const sellerItems = document.querySelectorAll('.seller-items');
+        sellerItems.forEach(item => {
+          item.classList.add('section-highlight');
+        });
+        setHighlightedSection('seller');
+      }
     }
   };
   
-  // Remove highlight effect
+  // Updated removeHighlight function to also clear section highlights
   const removeHighlight = () => {
     if (highlightedElement) {
       highlightedElement.classList.remove('tour-highlight');
       setHighlightedElement(null);
     }
+    
+    // Clear any section highlights
+    if (highlightedSection) {
+      const sectionElements = document.querySelectorAll(`.${highlightedSection}-items`);
+      sectionElements.forEach(el => {
+        el.classList.remove('section-highlight');
+      });
+      setHighlightedSection(null);
+    }
   };
 
-  // Position tour guide close to element
+  // Position tour guide close to element - with adjusted positioning
   const positionTourGuide = (element) => {
     if (!element || !tourModalRef.current) return;
     
@@ -160,12 +204,22 @@ const Dashboard = () => {
     const modalRect = tourModalRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
+    const sidebarWidth = document.querySelector('.sidebar')?.getBoundingClientRect().width || 250;
     
     // Calculate optimal position
     let left, top;
     
+    // For buyer and seller headers in the sidebar
+    if (element.closest('.sidebar-role-separator')) {
+      // Position at a fixed distance from the sidebar
+      // This matches the screenshot positioning
+      left = `${sidebarWidth + 50}px`;
+      
+      // Align with the element's top
+      top = `${elementRect.top - 20}px`;
+    }
     // Try to position to the right of the element
-    if (elementRect.right + modalRect.width + 20 < viewportWidth) {
+    else if (elementRect.right + modalRect.width + 20 < viewportWidth) {
       left = `${elementRect.right + 20}px`;
       top = `${elementRect.top + (elementRect.height / 2) - (modalRect.height / 2)}px`;
     } 
@@ -194,7 +248,7 @@ const Dashboard = () => {
     const numLeft = parseFloat(left);
     const numTop = parseFloat(top);
     
-    if (numLeft < 20) left = '20px';
+    if (numLeft < sidebarWidth + 10) left = `${sidebarWidth + 10}px`; // Keep away from sidebar
     if (numTop < 20) top = '20px';
     if (numLeft + modalRect.width > viewportWidth - 20) left = `${viewportWidth - modalRect.width - 20}px`;
     if (numTop + modalRect.height > viewportHeight - 20) top = `${viewportHeight - modalRect.height - 20}px`;
@@ -619,6 +673,48 @@ const Dashboard = () => {
     );
   };
 
+  // Add CSS styles for highlighting with useEffect
+  useEffect(() => {
+    // Create a style element for dynamic CSS
+    const styleElement = document.createElement('style');
+    
+    // Define CSS for the tour highlights
+    styleElement.textContent = `
+      .tour-highlight {
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 0 0 3px #6930c3;
+        border-radius: 5px;
+        animation: highlight-pulse 1.5s infinite alternate;
+      }
+      
+      .section-highlight {
+        background-color: rgba(105, 48, 195, 0.1);
+        box-shadow: inset 0 0 5px rgba(105, 48, 195, 0.3);
+        border-radius: 4px;
+        animation: section-pulse 1.5s infinite alternate;
+      }
+      
+      @keyframes highlight-pulse {
+        0% { box-shadow: 0 0 0 3px rgba(105, 48, 195, 0.7); }
+        100% { box-shadow: 0 0 0 6px rgba(105, 48, 195, 0.9); }
+      }
+      
+      @keyframes section-pulse {
+        0% { background-color: rgba(105, 48, 195, 0.1); }
+        100% { background-color: rgba(105, 48, 195, 0.2); }
+      }
+    `;
+    
+    // Add the style to the document head
+    document.head.appendChild(styleElement);
+    
+    // Clean up when component unmounts
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="dashboard-container">
@@ -827,70 +923,86 @@ const Dashboard = () => {
       <div className="sidebar">
         <div className="sidebar-logo">TokenFlow</div>
         <div className="sidebar-menu">
-          <motion.div 
+          {/* Common Dashboard */}
+          <div
             className={`sidebar-menu-item ${activeTab === 'dashboard' ? 'active' : ''}`}
             onClick={() => handleTabChange('dashboard')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <FiHome /> Dashboard
-          </motion.div>
-          <motion.div 
-            className={`sidebar-menu-item ${activeTab === 'apikeys' ? 'active' : ''}`}
-            onClick={() => handleTabChange('apikeys')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FiKey /> API Keys
-          </motion.div>
-          <motion.div 
-            className={`sidebar-menu-item ${activeTab === 'payment' ? 'active' : ''}`}
-            onClick={() => handleTabChange('payment')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FiHome /> Add Funds
-          </motion.div>
-          <motion.div 
-            className={`sidebar-menu-item ${activeTab === 'marketplace' ? 'active' : ''}`}
+            <FiHome />
+            <span>Dashboard</span>
+          </div>
+          
+          {/* Buyer Section - Target for tour step 2 */}
+          <div className="sidebar-role-separator">
+            <div className="sidebar-role-icon buyer">
+              <FiShoppingCart />
+            </div>
+            <span>Buyer</span>
+          </div>
+          
+          <div
+            className={`sidebar-menu-item buyer-items ${activeTab === 'marketplace' ? 'active' : ''}`}
             onClick={() => handleTabChange('marketplace')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <FiShoppingBag /> Marketplace
-          </motion.div>
-          <motion.div 
-            className={`sidebar-menu-item ${activeTab === 'purchases' ? 'active' : ''}`}
+            <FiShoppingBag />
+            <span>Marketplace</span>
+          </div>
+          
+          <div
+            className={`sidebar-menu-item buyer-items ${activeTab === 'purchases' ? 'active' : ''}`}
             onClick={() => handleTabChange('purchases')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <FiShoppingCart /> Purchase History
-          </motion.div>
-          <motion.div 
-            className={`sidebar-menu-item ${activeTab === 'sales' ? 'active' : ''}`}
+            <FiShoppingCart />
+            <span>Purchase History</span>
+          </div>
+          
+          {/* Seller Section - Target for tour step 3 */}
+          <div className="sidebar-role-separator">
+            <div className="sidebar-role-icon seller">
+              <FiKey />
+            </div>
+            <span>Seller</span>
+          </div>
+          
+          <div
+            className={`sidebar-menu-item seller-items ${activeTab === 'apikeys' ? 'active' : ''}`}
+            onClick={() => handleTabChange('apikeys')}
+          >
+            <FiKey />
+            <span>API Keys</span>
+          </div>
+          
+          <div
+            className={`sidebar-menu-item seller-items ${activeTab === 'sales' ? 'active' : ''}`}
             onClick={() => handleTabChange('sales')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <BsGraphUp /> Sales History
-          </motion.div>
-          <motion.div 
+            <BsGraphUp />
+            <span>Sales History</span>
+          </div>
+          
+          {/* Common Section for both roles */}
+          <div className="sidebar-role-separator">
+            <div className="sidebar-role-icon common">
+              <FiUser />
+            </div>
+            <span>Common</span>
+          </div>
+          
+          <div
             className={`sidebar-menu-item ${activeTab === 'chat' ? 'active' : ''}`}
             onClick={() => handleTabChange('chat')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <FiMessageSquare /> Chat
-          </motion.div>
-          <motion.div 
+            <FiMessageSquare />
+            <span>Chat</span>
+          </div>
+          
+          <div
             className={`sidebar-menu-item ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => handleTabChange('settings')}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <FiSettings /> Settings
-          </motion.div>
+            <FiSettings />
+            <span>Settings</span>
+          </div>
         </div>
 
         <div className="sidebar-user">
@@ -936,7 +1048,7 @@ const Dashboard = () => {
               </motion.button>
             </div>
 
-            {/* Stats Cards */}
+            {/* Stats Cards - Removed additional buyer/seller cards */}
             <div className="stats-cards-container">
               <motion.div 
                 initial={{ y: 50, opacity: 0 }}
@@ -1000,149 +1112,12 @@ const Dashboard = () => {
               </motion.div>
             </div>
 
-            {/* Token Usage Progress */}
-            <motion.div 
-              className="dashboard-card"
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, type: "spring" }}
-            >
-              <div className="card-header">
-                <h4>
-                  <FiBarChart2 /> Token Usage Analytics
-                </h4>
-              </div>
-              <div className="card-body">
-                <div className="analytics-grid">
-                  <div className="analytics-overview">
-                    <div className="token-usage-progress">
-                      <div className="circular-progress-container">
-                        <CircularProgressbar
-                          value={tokenStats.usagePercentage}
-                          text={`${tokenStats.usagePercentage}%`}
-                          styles={buildStyles({
-                            pathColor: 'url(#gradient)',
-                            textSize: '16px',
-                            textColor: 'var(--text-primary)',
-                            trailColor: 'rgba(255,255,255,0.1)'
-                          })}
-                        />
-                      </div>
-                      <div className="token-usage-info">
-                        <div className="token-usage-label">Total Tokens Used</div>
-                        <div className="token-usage-value">
-                          <CountUp end={tokenStats.usedTokens} duration={2.5} />
-                        </div>
-                        <motion.div 
-                          className="usage-details"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.7 }}
-                        >
-                          <div className="usage-metric">
-                            <div className="metric-icon api">
-                              <BsLightningCharge />
-                            </div>
-                            <div className="metric-info">
-                              <div className="metric-title">API Calls</div>
-                              <div className="metric-value">{tokenStats.apiCalls}</div>
-                            </div>
-                          </div>
-                          <div className="usage-metric">
-                            <div className="metric-icon storage">
-                              <FiShield />
-                            </div>
-                            <div className="metric-info">
-                              <div className="metric-title">Token Security</div>
-                              <div className="metric-value">{tokenStats.securityLevel}</div>
-                            </div>
-                          </div>
-                        </motion.div>
-          </div>
-        </div>
-      </div>
-
-                  <div className="analytics-charts">
-                    <div className="charts-row">
-                      <div className="chart-container">
-                        <h5 className="chart-title">Token Distribution</h5>
-                        <div className="chart-wrapper doughnut-chart">
-                          <Doughnut data={doughnutData} options={doughnutOptions} />
-                        </div>
-                      </div>
-                      
-                      <div className="chart-container">
-                        <h5 className="chart-title">Usage by API Key</h5>
-                        <div className="chart-wrapper">
-                          <Bar data={barData} options={chartOptions} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="chart-container full-width">
-                      <h5 className="chart-title">Token Usage Over Time</h5>
-                      <div className="chart-wrapper">
-                        <Line data={lineData} options={chartOptions} />
-                      </div>
-                    </div>
-                    
-                    <div className="security-metrics">
-                      <h5 className="chart-title">Security Analysis</h5>
-                      <div className="security-metrics-grid">
-                        <div className="security-metric-item">
-                          <div className="security-metric-label">Key Strength</div>
-                          <div className="security-progress-bar">
-                            <div 
-                              className="security-progress-fill" 
-                              style={{ 
-                                width: `${tokenStats.securityMetrics?.keyStrength || 0}%`,
-                                backgroundColor: getSecurityColor(tokenStats.securityMetrics?.keyStrength)
-                              }}
-                            ></div>
-                          </div>
-                          <div className="security-metric-value">{tokenStats.securityMetrics?.keyStrength || 0}%</div>
-                        </div>
-                        
-                        <div className="security-metric-item">
-                          <div className="security-metric-label">Access Control</div>
-                          <div className="security-progress-bar">
-                            <div 
-                              className="security-progress-fill" 
-                              style={{ 
-                                width: `${tokenStats.securityMetrics?.accessControl || 0}%`,
-                                backgroundColor: getSecurityColor(tokenStats.securityMetrics?.accessControl)
-                              }}
-                            ></div>
-                          </div>
-                          <div className="security-metric-value">{tokenStats.securityMetrics?.accessControl || 0}%</div>
-                        </div>
-                        
-                        <div className="security-metric-item">
-                          <div className="security-metric-label">Usage Patterns</div>
-                          <div className="security-progress-bar">
-                            <div 
-                              className="security-progress-fill" 
-                              style={{ 
-                                width: `${tokenStats.securityMetrics?.usagePatterns || 0}%`,
-                                backgroundColor: getSecurityColor(tokenStats.securityMetrics?.usagePatterns)
-                              }}
-                            ></div>
-                          </div>
-                          <div className="security-metric-value">{tokenStats.securityMetrics?.usagePatterns || 0}%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
             {/* API Keys Section */}
             <motion.div 
               className="dashboard-card"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, type: "spring" }}
+              transition={{ delay: 0.6, type: "spring" }}
             >
               <div className="card-header">
                 <h4>Your API Keys</h4>
@@ -1158,7 +1133,7 @@ const Dashboard = () => {
                 className="dashboard-card"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6, type: "spring" }}
+                transition={{ delay: 0.7, type: "spring" }}
               >
                 <div className="card-header">
                 <h4>Your Purchased Tokens</h4>
@@ -1206,7 +1181,7 @@ const Dashboard = () => {
                   className="dashboard-card"
                   initial={{ y: 50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.7, type: "spring" }}
+                  transition={{ delay: 0.8, type: "spring" }}
                   style={{ height: '100%' }}
                 >
                   <div className="card-header">
@@ -1233,7 +1208,7 @@ const Dashboard = () => {
                   className="dashboard-card"
                   initial={{ y: 50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8, type: "spring" }}
+                  transition={{ delay: 0.9, type: "spring" }}
                   style={{ height: '100%' }}
                 >
                   <div className="card-header">
@@ -1329,12 +1304,12 @@ const Dashboard = () => {
         {activeTab === 'chat' && (
           <div className="dashboard-card chat-card">
             <div className="card-header">
-              <h4><FiMessageSquare /> Chat Interface</h4>
+              <h4><FiMessageSquare /> Chat Support</h4>
             </div>
             <div className="card-body chat-card-body">
               <ChatInterface />
-        </div>
-      </div>
+            </div>
+          </div>
         )}
 
         {activeTab === 'settings' && (
@@ -1389,39 +1364,92 @@ const Dashboard = () => {
               left: tourPosition.left,
               top: tourPosition.top,
               zIndex: 9999,
+              width: '360px',
+              backgroundColor: '#1a1f36',
+              borderRadius: '12px',
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              overflow: 'hidden',
               transition: 'left 0.4s ease, top 0.4s ease'
             }}
           >
             <div 
               className="tour-header"
               onMouseDown={handleMouseDown}
-              style={{ cursor: 'move' }}
+              style={{ 
+                cursor: 'move',
+                padding: '14px 20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: 'rgba(255, 255, 255, 0.03)'
+              }}
             >
               <div className="tour-drag-handle">
-                <FiMoreHorizontal />
+                <FiMoreHorizontal style={{ opacity: 0.7 }} />
               </div>
-              <h3>{tourSteps[tourStep - 1].title}</h3>
+              <h3 style={{ 
+                margin: 0, 
+                fontSize: '18px', 
+                fontWeight: '600',
+                color: 'white'
+              }}>
+                {tourSteps[tourStep - 1].title}
+              </h3>
               <button 
                 className="tour-close-button"
                 onClick={endTour}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '20px',
+                  padding: '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
               >
                 <FiX />
               </button>
             </div>
             
-            <div className="tour-body">
-              <p>{tourSteps[tourStep - 1].description}</p>
+            <div className="tour-body" style={{ padding: '20px', color: 'rgba(255, 255, 255, 0.8)' }}>
+              <p style={{ margin: 0, lineHeight: '1.6' }}>
+                {tourSteps[tourStep - 1].description}
+              </p>
             </div>
             
-            <div className="tour-footer">
-              <div className="tour-progress">
+            <div className="tour-footer" style={{ 
+              padding: '15px 20px', 
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <div className="tour-progress" style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '14px' }}>
                 Step {tourStep} of {tourSteps.length}
               </div>
-              <div className="tour-actions">
+              <div className="tour-actions" style={{ display: 'flex', gap: '10px' }}>
                 {tourStep > 1 && (
                   <button 
                     className="tour-button prev"
                     onClick={prevStep}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '8px 16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}
                   >
                     <FiArrowLeft /> Previous
                   </button>
@@ -1430,6 +1458,19 @@ const Dashboard = () => {
                   <button 
                     className="tour-button next"
                     onClick={nextStep}
+                    style={{
+                      backgroundColor: '#5e60ce',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '8px 16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}
                   >
                     Next <FiArrowRight />
                   </button>
@@ -1437,6 +1478,19 @@ const Dashboard = () => {
                   <button 
                     className="tour-button finish"
                     onClick={endTour}
+                    style={{
+                      backgroundColor: '#5e60ce',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '8px 16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}
                   >
                     Finish <FiCheckCircle />
                   </button>

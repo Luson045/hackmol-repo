@@ -3127,3 +3127,41 @@
     }
   }
   
+  /* Role Separator Styling */
+  .sidebar-role-separator {
+    padding: 1rem 1.5rem 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .sidebar-role-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    font-size: 0.7rem;
+  }
+  
+  .sidebar-role-icon.buyer {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+  }
+  
+  .sidebar-role-icon.seller {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    color: white;
+  }
+  
+  .sidebar-role-icon.common {
+    background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+    color: white;
+  }
+  
