@@ -34,7 +34,9 @@ export default function ExpandableChatbot() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post('/api/bot/ask', { text: inputText });
+      const temp =inputText;
+      setInputText("");
+      const res = await axios.post('/api/bot/ask', { text: temp });
       const botResponse = res.data.response || res.data.answer || "I didn't get a proper response.";
 
       const botMessage = {
